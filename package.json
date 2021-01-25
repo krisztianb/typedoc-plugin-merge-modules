@@ -1,0 +1,50 @@
+{
+    "name": "typedoc-plugin-allinone",
+    "version": "1.0.0",
+    "description": "Plugin for TypeDoc that merges all modules into one",
+    "author": {
+        "name": "Krisztián Balla",
+        "url": "https://github.com/krisztianb"
+    },
+    "license": "ISC",
+    "keywords": [
+        "typedocplugin"
+    ],
+    "devDependencies": {
+        "@types/node": "14.14.22",
+        "@typescript-eslint/eslint-plugin": "4.14.0",
+        "@typescript-eslint/parser": "4.14.0",
+        "eslint": "7.18.0",
+        "eslint-plugin-jsdoc": "31.3.3",
+        "eslint-plugin-ordered-imports": "0.4.1",
+        "eslint-plugin-unicorn": "27.0.0",
+        "husky": "4.3.8",
+        "prettier": "2.2.1",
+        "rimraf": "3.0.2",
+        "typedoc": "0.20.19",
+        "typescript": "4.1.3"
+    },
+    "peerDependencies": {
+        "typedoc": "0.20.x"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/krisztianb/typedoc-plugin-allinone.git"
+    },
+    "husky": {
+        "hooks": {
+            "pre-push": "npm run lint && npm run format"
+        }
+    },
+    "main": "dist/index.js",
+    "files": [
+        "/dist"
+    ],
+    "scripts": {
+        "lint": "npx eslint ./src",
+        "format": "npx prettier --check ./src",
+        "clean": "rimraf dist",
+        "build": "npx tsc",
+        "clean-build": "npm run clean && npm run build"
+    }
+}
