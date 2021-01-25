@@ -1,29 +1,19 @@
-import { Application } from "typedoc";
+import { Application, ReflectionKind } from "typedoc";
 import { Context, Converter } from "typedoc/dist/lib/converter";
-import { PluginOptions } from "./plugin_options";
 
 /**
- * The "replace in comments" plugin.
+ * The "All In One" plugin.
  *
  * # What does it do?
  *
- * This plugin replaces text in comments with other text.
- *
- * # How does it do it?
- *
- * The plugin scans through all comments of all reflections and uses the replacment patterns specified
- * by the user to replace text in these comments.
+ * This plugin moves the content of all modules into the project itself.
  */
 export class Plugin {
-    /** The options of this plugin. */
-    private readonly options = new PluginOptions();
-
     /**
      * Initializes the plugin.
      * @param typedoc The TypeDoc application.
      */
     public initialize(typedoc: Readonly<Application>): void {
-        this.options.addToApplication(typedoc);
         this.subscribeToApplicationEvents(typedoc);
     }
 
@@ -33,48 +23,33 @@ export class Plugin {
      * @param typedoc The TypeDoc application.
      */
     private subscribeToApplicationEvents(typedoc: Readonly<Application>): void {
-        typedoc.converter.on(Converter.EVENT_BEGIN, (c: Readonly<Context>) => this.onConverterBegin(c));
         typedoc.converter.on(Converter.EVENT_RESOLVE_BEGIN, (c: Readonly<Context>) => this.onConverterResolveBegin(c));
-    }
-
-    /**
-     * Triggered when the converter begins converting a project.
-     * @param context Describes the current state the converter is in.
-     */
-    public onConverterBegin(context: Readonly<Context>): void {
-        this.options.readValuesFromApplication(context.converter.owner.application);
     }
 
     /**
      * Triggered when the TypeDoc converter begins resolving a project.
      * @param context Describes the current state the converter is in.
      */
+    // eslint-disable-next-line class-methods-use-this
     public onConverterResolveBegin(context: Readonly<Context>): void {
-        if (this.options.replacements.length > 0) {
-            const project = context.project;
+        const project = context.project;
+        const modules = project.children ?? [];
 
-            // go through all the reflections' comments
-            for (const key in project.reflections) {
-                const reflection = project.reflections[key];
+        project.children = [];
 
-                if (reflection.comment) {
-                    reflection.comment.shortText = this.replaceInComment(reflection.comment.shortText);
-                    reflection.comment.text = this.replaceInComment(reflection.comment.text);
+        for (const mod of modules) {
+            const reflections = mod.children ?? [];
+
+            for (const ref of reflections) {
+                // Drop aliases
+                if (!ref.kindOf(ReflectionKind.Reference)) {
+                    ref.parent = project;
+                    project.children.push(ref);
                 }
             }
-        }
-    }
 
-    /**
-     * Applies the replacement info to the comment.
-     * @param comment The comment on which to apply the replacement info.
-     * @returns The modified comment.
-     */
-    private replaceInComment(comment: string): string {
-        for (const replacement of this.options.replacements) {
-            comment = comment.replace(replacement.regex, replacement.replace);
+            mod.children = undefined;
+            project.removeReflection(mod);
         }
-
-        return comment;
     }
 }

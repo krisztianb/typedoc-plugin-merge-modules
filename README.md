@@ -2,16 +2,13 @@
 
 # typedoc-plugin-allinone
 
-This is a plugin for [TypeDoc](https://github.com/TypeStrong/typedoc) that merges all modules into one.
+This is a plugin for [TypeDoc](https://github.com/TypeStrong/typedoc) that moves the content of all modules into the
+project itself.
 
 Before version 0.20 TypeDoc had a **file mode** which created a documentation whos output didn't consider modules as
-units of separation. This was useful for creating a documentation for entire TypeScript applications (not libraries).
+units of separation. This was useful for documentating entire TypeScript applications where modules are irrelevant.
 
-Since version 0.20 this file mode is no longer available. Every TypeDoc entry point is documented as a separate module.
-If you specify all the files you want to document as entry points you end up with a documenation containing dozens or
-hundreds of modules. This makes the documentation extremely difficult to follow.
-
-This plugin brings back file mode to TypeDoc by merging all modules into one.
+Since version 0.20 file mode is no longer available in TypeDoc. Use this plugin to bring back file mode to TypeDoc.
 
 ## Installation
 
