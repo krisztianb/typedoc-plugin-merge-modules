@@ -33,23 +33,25 @@ export class Plugin {
     // eslint-disable-next-line class-methods-use-this
     public onConverterResolveBegin(context: Readonly<Context>): void {
         const project = context.project;
-        const modules = project.children ?? [];
+        const modules = (project.children ?? []).filter((c) => c.kindOf(ReflectionKind.Module));
 
-        project.children = [];
+        if (modules.length > 0) {
+            project.children = [];
 
-        for (const mod of modules) {
-            const reflections = mod.children ?? [];
+            for (const mod of modules) {
+                const reflections = mod.children ?? [];
 
-            for (const ref of reflections) {
-                // Drop aliases
-                if (!ref.kindOf(ReflectionKind.Reference)) {
-                    ref.parent = project;
-                    project.children.push(ref);
+                for (const ref of reflections) {
+                    // Drop aliases
+                    if (!ref.kindOf(ReflectionKind.Reference)) {
+                        ref.parent = project;
+                        project.children.push(ref);
+                    }
                 }
-            }
 
-            mod.children = undefined;
-            project.removeReflection(mod);
+                mod.children = undefined;
+                project.removeReflection(mod);
+            }
         }
     }
 }
