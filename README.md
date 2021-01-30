@@ -1,4 +1,4 @@
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=67UU75EUH4S8A)
+[![NPM Version](https://badge.fury.io/js/typedoc-plugin-merge-modules.svg)](https://badge.fury.io/js/typedoc-plugin-merge-modules) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=67UU75EUH4S8A)
 
 # typedoc-plugin-merge-modules
 
