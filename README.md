@@ -21,6 +21,16 @@ $ npm install typedoc-plugin-allinone --save-dev
 TypeDoc automatically detects plugins installed via npm. After installation TypeDoc can be used normally and you can
 configure this plugin as described below.
 
+## Example
+
+When running TypeDoc with two module files `module1.ts` and `module2.ts` as entry points produces the following result:
+
+![Before](https://raw.githubusercontent.com/krisztianb/typedoc-plugin-allinone/master/doc/before-example.png)
+
+Using this plugin will make the result look like this:
+
+![After](https://raw.githubusercontent.com/krisztianb/typedoc-plugin-allinone/master/doc/after-example.png)
+
 ## Configuration
 
 Currently this plugin has no configuration options.
