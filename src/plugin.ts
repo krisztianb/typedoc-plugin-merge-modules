@@ -2,11 +2,11 @@ import { Application, ReflectionKind } from "typedoc";
 import { Context, Converter } from "typedoc/dist/lib/converter";
 
 /**
- * The "All In One" plugin.
+ * The "Merge Modules" plugin.
  *
  * # What does it do?
  *
- * This plugin moves the content of all modules into the project itself.
+ * This plugin merges the content of all modules into the project itself.
  */
 export class Plugin {
     /**
