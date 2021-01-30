@@ -11,5 +11,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 First release
 
-[unreleased]: https://github.com/krisztianb/typedoc-plugin-allinone/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/krisztianb/typedoc-plugin-allinone/releases/tag/v1.0.0
+[unreleased]: https://github.com/krisztianb/typedoc-plugin-merge-modules/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v1.0.0
