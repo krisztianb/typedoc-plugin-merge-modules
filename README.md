@@ -31,14 +31,25 @@ Using this plugin will make the result look like this:
 
 ![After](https://raw.githubusercontent.com/krisztianb/typedoc-plugin-merge-modules/master/doc/after-example.png)
 
-## Configuration
+## Options
 
-Currently this plugin has no configuration options.
+The following options are added to TypeDoc when the plugin is installed:
+
+| Name & Format | Description | Default |
+| ------------- | ----------- | ------- |
+| **mergeModulesRenameDefaults** `<boolean>` | Defines if the plugin should rename default exports to their original name. | `true` |
 
 ## Bugs
 
 Please report bugs [here](https://github.com/krisztianb/typedoc-plugin-merge-modules/issues).
 Thanks for your contribution!
+
+## Credits
+
+Special thanks go to the following people that influenced this project:
+
+-   [Gerrit Birkeland](https://github.com/Gerrit0) for the suggested solution and code example.
+-   [Felipe Santos](https://github.com/felipecrs) for suggesting improvements.
 
 ## Donate
 

@@ -1,7 +1,7 @@
 {
     "name": "typedoc-plugin-merge-modules",
-    "version": "1.0.0",
-    "description": "Plugin for TypeDoc that moves the content of all modules into the project itself",
+    "version": "2.0.0",
+    "description": "Plugin for TypeDoc that moves the content of all modules into the project itself.",
     "author": {
         "name": "Krisztián Balla",
         "url": "https://github.com/krisztianb"
