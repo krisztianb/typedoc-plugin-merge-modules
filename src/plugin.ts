@@ -98,28 +98,30 @@ export class Plugin {
                 }
                 break;
             case "module":
-                // conbine module DeclarationReflection by its module name
-                const combinedModules: Record<string, DeclarationReflection[]> = {};
-                modules.forEach((module) =>
-                    combinedModules[module.name]
-                        ? combinedModules[module.name].push(module)
-                        : (combinedModules[module.name] = [module]),
-                );
+                {
+                    // conbine module DeclarationReflection by its module name
+                    const combinedModules: Record<string, DeclarationReflection[]> = {};
+                    modules.forEach((module) =>
+                        (Array.isArray(combinedModules[module.name])
+                            ? combinedModules[module.name].push(module)
+                            : (combinedModules[module.name] = [module])),
+                    );
 
-                // reduce multiple DeclarationReflection into single declaration
-                for (const modName in combinedModules) {
-                    const mods = combinedModules[modName];
-                    const children = mods
-                        .map((m) => m.children)
-                        .filter((m): m is DeclarationReflection[] => m !== undefined)
-                        .reduce((acc, val) => acc.concat(val), []);
-                    // use first module as a principle module
-                    children.forEach((child) => (child.parent = mods[0]));
-                    mods[0].children = children;
-                    // remove rest modules
-                    for (let i = 1; i < mods.length; i++) {
-                        mods[i].children = undefined;
-                        project.removeReflection(mods[i]);
+                    // reduce multiple DeclarationReflection into single declaration
+                    for (const modName in combinedModules) {
+                        const mods = combinedModules[modName];
+                        const children = mods
+                            .map((m) => m.children)
+                            .filter((m): m is DeclarationReflection[] => m !== undefined)
+                            .reduce((acc, val) => acc.concat(val), []);
+                        // use first module as a principle module
+                        children.forEach((child) => (child.parent = mods[0]));
+                        mods[0].children = children;
+                        // remove rest modules
+                        for (let i = 1; i < mods.length; i++) {
+                            mods[i].children = undefined;
+                            project.removeReflection(mods[i]);
+                        }
                     }
                 }
                 break;
