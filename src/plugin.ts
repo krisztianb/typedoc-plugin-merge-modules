@@ -101,10 +101,11 @@ export class Plugin {
                 {
                     // conbine module DeclarationReflection by its module name
                     const combinedModules: Record<string, DeclarationReflection[]> = {};
+                    // eslint-disable-next-line no-confusing-arrow
                     modules.forEach((module) =>
-                        (Array.isArray(combinedModules[module.name])
+                        Array.isArray(combinedModules[module.name])
                             ? combinedModules[module.name].push(module)
-                            : (combinedModules[module.name] = [module])),
+                            : (combinedModules[module.name] = [module]),
                     );
 
                     // reduce multiple DeclarationReflection into single declaration
