@@ -111,8 +111,10 @@ export class Plugin {
                     const mods = combinedModules[modName];
                     const children = mods
                         .map((m) => m.children)
-                        .reduce((acc, val) => (val ? (acc || []).concat(val) : acc), []);
+                        .filter((m): m is DeclarationReflection[] => m !== undefined)
+                        .reduce((acc, val) => acc.concat(val), []);
                     // use first module as a principle module
+                    children.forEach((child) => (child.parent = mods[0]));
                     mods[0].children = children;
                     // remove rest modules
                     for (let i = 1; i < mods.length; i++) {
