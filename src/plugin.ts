@@ -1,4 +1,4 @@
-import { Application, Reflection, ReflectionKind } from "typedoc";
+import { Application, DeclarationReflection, Reflection, ReflectionKind } from "typedoc";
 import { Context, Converter } from "typedoc/dist/lib/converter";
 import * as ts from "typescript";
 import { PluginOptions } from "./plugin_options";
@@ -76,6 +76,30 @@ export class Plugin {
         const project = context.project;
         const modules = (project.children ?? []).filter((c) => c.kindOf(ReflectionKind.Module));
 
+        // conbine module DeclarationReflection by its module name
+        const combinedModules: Record<string, DeclarationReflection[]> = {};
+        modules.forEach((module) =>
+            combinedModules[module.name]
+                ? combinedModules[module.name].push(module)
+                : (combinedModules[module.name] = [module]),
+        );
+
+        // reduce multiple DeclarationReflection into single declaration
+        for (const modName in combinedModules) {
+            const mods = combinedModules[modName];
+            const children = mods
+                .map((m) => m.children)
+                .reduce((acc, val) => (val ? (acc || []).concat(val) : acc), []);
+            // use first module as a principle module
+            mods[0].children = children;
+            // remove rest modules
+            for (let i = 1; i < mods.length; i++) {
+                mods[i].children = undefined;
+                project.removeReflection(mods[i]);
+            }
+        }
+
+        /*
         if (modules.length > 0) {
             project.children = [];
 
@@ -94,5 +118,6 @@ export class Plugin {
                 project.removeReflection(mod);
             }
         }
+        */
     }
 }
