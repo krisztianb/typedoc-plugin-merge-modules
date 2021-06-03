@@ -1,4 +1,4 @@
-import { Application, Reflection, ReflectionKind } from "typedoc";
+import { Application, DeclarationReflection, Reflection, ReflectionKind } from "typedoc";
 import { Context, Converter } from "typedoc/dist/lib/converter";
 import * as ts from "typescript";
 import { PluginOptions } from "./plugin_options";
@@ -76,23 +76,56 @@ export class Plugin {
         const project = context.project;
         const modules = (project.children ?? []).filter((c) => c.kindOf(ReflectionKind.Module));
 
-        if (modules.length > 0) {
-            project.children = [];
+        switch (this.options.modeDefaults) {
+            case "project":
+                if (modules.length > 0) {
+                    project.children = [];
 
-            for (const mod of modules) {
-                const reflections = mod.children ?? [];
+                    for (const mod of modules) {
+                        const reflections = mod.children ?? [];
 
-                for (const ref of reflections) {
-                    // Drop aliases
-                    if (!ref.kindOf(ReflectionKind.Reference)) {
-                        ref.parent = project;
-                        project.children.push(ref);
+                        for (const ref of reflections) {
+                            // Drop aliases
+                            if (!ref.kindOf(ReflectionKind.Reference)) {
+                                ref.parent = project;
+                                project.children.push(ref);
+                            }
+                        }
+
+                        mod.children = undefined;
+                        project.removeReflection(mod);
                     }
                 }
+                break;
+            case "module":
+                {
+                    // conbine module DeclarationReflection by its module name
+                    const combinedModules: Record<string, DeclarationReflection[]> = {};
+                    // eslint-disable-next-line no-confusing-arrow
+                    modules.forEach((module) =>
+                        Array.isArray(combinedModules[module.name])
+                            ? combinedModules[module.name].push(module)
+                            : (combinedModules[module.name] = [module]),
+                    );
 
-                mod.children = undefined;
-                project.removeReflection(mod);
-            }
+                    // reduce multiple DeclarationReflection into single declaration
+                    for (const modName in combinedModules) {
+                        const mods = combinedModules[modName];
+                        const children = mods
+                            .map((m) => m.children)
+                            .filter((m): m is DeclarationReflection[] => m !== undefined)
+                            .reduce((acc, val) => acc.concat(val), []);
+                        // use first module as a principle module
+                        children.forEach((child) => (child.parent = mods[0]));
+                        mods[0].children = children;
+                        // remove rest modules
+                        for (let i = 1; i < mods.length; i++) {
+                            mods[i].children = undefined;
+                            project.removeReflection(mods[i]);
+                        }
+                    }
+                }
+                break;
         }
     }
 }
