@@ -19,32 +19,50 @@ export class ModuleMerger {
      * Performs the merging routine.
      */
     public execute(): void {
+        const moduleCombinations = this.createModuleCombinations();
+
+        for (const name in moduleCombinations) {
+            this.mergeModules(moduleCombinations[name]);
+        }
+    }
+
+    /**
+     * Creates an object describing which modules of the project should be merged.
+     * @returns The object describing which modules should be merged.
+     */
+    private createModuleCombinations(): Record<string, DeclarationReflection[]> {
         const modules = (this.project.children ?? []).filter((c) => c.kindOf(ReflectionKind.Module));
+        const result: ReturnType<ModuleMerger["createModuleCombinations"]> = {};
 
-        // conbine module DeclarationReflection by its module name
-        const combinedModules: Record<string, DeclarationReflection[]> = {};
-        // eslint-disable-next-line no-confusing-arrow
-        modules.forEach((module) =>
-            Array.isArray(combinedModules[module.name])
-                ? combinedModules[module.name].push(module)
-                : (combinedModules[module.name] = [module]),
-        );
-
-        // reduce multiple DeclarationReflection into single declaration
-        for (const modName in combinedModules) {
-            const mods = combinedModules[modName];
-            const children = mods
-                .map((m) => m.children)
-                .filter((m): m is DeclarationReflection[] => m !== undefined)
-                .reduce((acc, val) => acc.concat(val), []);
-            // use first module as a principle module
-            children.forEach((child) => (child.parent = mods[0]));
-            mods[0].children = children;
-            // remove rest modules
-            for (let i = 1; i < mods.length; i++) {
-                mods[i].children = undefined;
-                this.project.removeReflection(mods[i]);
+        for (const module of modules) {
+            if (Array.isArray(result[module.name])) {
+                result[module.name].push(module);
+            } else {
+                result[module.name] = [module];
             }
+        }
+
+        return result;
+    }
+
+    /**
+     * Merges the provided modules within the project into one module.
+     * @param modules The modules which should be merged into one module.
+     */
+    private mergeModules(modules: DeclarationReflection[]): void {
+        const childrenOfAllModules = modules
+            .map((m) => m.children)
+            .filter((m): m is DeclarationReflection[] => m !== undefined)
+            .reduce((acc, val) => acc.concat(val), []);
+
+        // use first module as a principle module
+        childrenOfAllModules.forEach((child) => (child.parent = modules[0]));
+        modules[0].children = childrenOfAllModules;
+
+        // remove rest modules
+        for (let i = 1; i < modules.length; ++i) {
+            modules[i].children = undefined;
+            this.project.removeReflection(modules[i]);
         }
     }
 }
