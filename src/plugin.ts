@@ -1,6 +1,8 @@
-import { Application, DeclarationReflection, Reflection, ReflectionKind } from "typedoc";
+import { Application, Reflection } from "typedoc";
 import { Context, Converter } from "typedoc/dist/lib/converter";
 import * as ts from "typescript";
+import { ModuleMerger } from "./merger/module_merger";
+import { ProjectMerger } from "./merger/project_merger";
 import { PluginOptions } from "./plugin_options";
 
 /**
@@ -8,7 +10,7 @@ import { PluginOptions } from "./plugin_options";
  *
  * # What does it do?
  *
- * This plugin merges the content of all modules into the project itself.
+ * This plugin merges the content of modules.
  */
 export class Plugin {
     /** The options of the plugin. */
@@ -71,61 +73,11 @@ export class Plugin {
      * Triggered when the TypeDoc converter begins resolving a project.
      * @param context Describes the current state the converter is in.
      */
-    // eslint-disable-next-line class-methods-use-this
     public onConverterResolveBegin(context: Readonly<Context>): void {
-        const project = context.project;
-        const modules = (project.children ?? []).filter((c) => c.kindOf(ReflectionKind.Module));
-
-        switch (this.options.modeDefaults) {
-            case "project":
-                if (modules.length > 0) {
-                    project.children = [];
-
-                    for (const mod of modules) {
-                        const reflections = mod.children ?? [];
-
-                        for (const ref of reflections) {
-                            // Drop aliases
-                            if (!ref.kindOf(ReflectionKind.Reference)) {
-                                ref.parent = project;
-                                project.children.push(ref);
-                            }
-                        }
-
-                        mod.children = undefined;
-                        project.removeReflection(mod);
-                    }
-                }
-                break;
-            case "module":
-                {
-                    // conbine module DeclarationReflection by its module name
-                    const combinedModules: Record<string, DeclarationReflection[]> = {};
-                    // eslint-disable-next-line no-confusing-arrow
-                    modules.forEach((module) =>
-                        Array.isArray(combinedModules[module.name])
-                            ? combinedModules[module.name].push(module)
-                            : (combinedModules[module.name] = [module]),
-                    );
-
-                    // reduce multiple DeclarationReflection into single declaration
-                    for (const modName in combinedModules) {
-                        const mods = combinedModules[modName];
-                        const children = mods
-                            .map((m) => m.children)
-                            .filter((m): m is DeclarationReflection[] => m !== undefined)
-                            .reduce((acc, val) => acc.concat(val), []);
-                        // use first module as a principle module
-                        children.forEach((child) => (child.parent = mods[0]));
-                        mods[0].children = children;
-                        // remove rest modules
-                        for (let i = 1; i < mods.length; i++) {
-                            mods[i].children = undefined;
-                            project.removeReflection(mods[i]);
-                        }
-                    }
-                }
-                break;
-        }
+        const merger =
+            this.options.modeDefaults === "project"
+                ? new ProjectMerger(context.project)
+                : new ModuleMerger(context.project);
+        merger.execute();
     }
 }
