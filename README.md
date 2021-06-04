@@ -2,13 +2,12 @@
 
 # typedoc-plugin-merge-modules
 
-This is a plugin for [TypeDoc](https://github.com/TypeStrong/typedoc) that moves the content of all modules into the
-project itself.
+This is a plugin for [TypeDoc](https://github.com/TypeStrong/typedoc) that merges the content of modules.
 
-Before version 0.20 TypeDoc had a **file mode** which created a documentation whos output didn't consider modules as
-units of separation. This was useful for documentating entire TypeScript applications where modules are irrelevant.
+Use cases:
 
-Since version 0.20 file mode is no longer available in TypeDoc. Use this plugin to bring back file mode to TypeDoc.
+* If you want to document an entire application and not a library, you can specify all files that you want to have documented as entry points for TypeDoc and use this plugin to merge all modules into the project root removing the extra module layer.
+* If you want to merge the content of some modules in the TypeDoc output, you can use this plugin and [module annotations](https://typedoc.org/guides/doccomments/#files) in your files to specify which modules should be combined.
 
 ## Installation
 
@@ -38,7 +37,7 @@ The following options are added to TypeDoc when the plugin is installed:
 | Name & Format | Description | Default |
 | ------------- | ----------- | ------- |
 | **mergeModulesRenameDefaults** `<boolean>` | Defines if the plugin should rename default exports to their original name. | `true` |
-| **mergeModulesMergeMode** `<'project'|'module'>` | Defines if the plugin combine modules into project self or by module name. | `project` |
+| **mergeModulesMergeMode** `<'project'|'module'>` | Defines if the plugin should merge all modules into the `project` or if it should merge modules based on their `module` annotation. | `project` |
 
 ## Bugs
 
