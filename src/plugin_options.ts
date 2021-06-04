@@ -1,5 +1,6 @@
 import { Application, ParameterType } from "typedoc";
 
+/** Type for the plugin's mode. */
 type Mode = "project" | "module";
 
 /**
@@ -20,8 +21,8 @@ export class PluginOptions {
     /** Defines if the plugin should rename default exports to their original name. */
     private _renameDefaults = true;
 
-    /** Defines if the plugin combine modules into project self or by module name. */
-    private _modeDefaults: Mode = "project";
+    /** Defines how the plugin should merge modules. */
+    private _mode: Mode = "project";
 
     /**
      * Returns if the plugin should rename default exports to their original name.
@@ -32,11 +33,11 @@ export class PluginOptions {
     }
 
     /**
-     * Returns if the plugin combine modules into project self or by module name.
-     * @returns 'project', if the plugin combine modules into project self or by module name, otherwise 'module'.
+     * Returns how the plugin should merge modules.
+     * @returns How the plugin should merge modules.
      */
-    public get modeDefaults(): Mode {
-        return this._modeDefaults;
+    public get mode(): Mode {
+        return this._mode;
     }
 
     /**
@@ -53,11 +54,13 @@ export class PluginOptions {
         });
 
         typedoc.options.addDeclaration({
-            type: ParameterType.String,
+            type: ParameterType.Map,
+            map: new Map([
+                ["project", "project"],
+                ["module", "module"],
+            ]),
             name: "mergeModulesMergeMode",
-            help:
-                // eslint-disable-next-line max-len
-                "Move all modules into project itself with 'project' ( default ). If 'module' set, modules combined by its name",
+            help: "Defines how the plugin should merge modules.",
             defaultValue: "project",
         });
     }
@@ -68,6 +71,6 @@ export class PluginOptions {
      */
     public readValuesFromApplication(typedoc: Readonly<Application>): void {
         this._renameDefaults = typedoc.options.getValue("mergeModulesRenameDefaults") ?? this._renameDefaults;
-        this._modeDefaults = typedoc.options.getValue("mergeModulesMergeMode") ?? this._modeDefaults;
+        this._mode = typedoc.options.getValue("mergeModulesMergeMode") ?? this._mode;
     }
 }

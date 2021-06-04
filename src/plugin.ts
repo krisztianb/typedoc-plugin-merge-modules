@@ -75,9 +75,7 @@ export class Plugin {
      */
     public onConverterResolveBegin(context: Readonly<Context>): void {
         const merger =
-            this.options.modeDefaults === "project"
-                ? new ProjectMerger(context.project)
-                : new ModuleMerger(context.project);
+            this.options.mode === "project" ? new ProjectMerger(context.project) : new ModuleMerger(context.project);
         merger.execute();
     }
 }
