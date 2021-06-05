@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2021-06-05
+
+### Added
+
+-   New option `mergeModulesMergeMode` to merge by module names or to turn the plugin off.
+
 ## [2.0.0] - 2021-03-13
 
 ### Added
@@ -21,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 First release
 
-[unreleased]: https://github.com/krisztianb/typedoc-plugin-merge-modules/compare/v2.0.0...HEAD
+[unreleased]: https://github.com/krisztianb/typedoc-plugin-merge-modules/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v2.1.0
 [2.0.0]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v2.0.0
 [1.0.0]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v1.0.0
