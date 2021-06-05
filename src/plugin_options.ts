@@ -1,7 +1,7 @@
 import { Application, ParameterType } from "typedoc";
 
 /** Type for the plugin's mode. */
-type Mode = "project" | "module";
+type Mode = "project" | "module" | "off";
 
 /**
  * Extend typedoc's options with the plugin's option using declaration merging.
@@ -58,6 +58,7 @@ export class PluginOptions {
             map: new Map([
                 ["project", "project"],
                 ["module", "module"],
+                ["off", "off"],
             ]),
             name: "mergeModulesMergeMode",
             help: "Defines how the plugin should merge modules.",

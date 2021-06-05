@@ -1,4 +1,4 @@
-import { Application, Reflection } from "typedoc";
+import { Application, ProjectReflection, Reflection } from "typedoc";
 import { Context, Converter } from "typedoc/dist/lib/converter";
 import * as ts from "typescript";
 import { ModuleMerger } from "./merger/module_merger";
@@ -74,8 +74,21 @@ export class Plugin {
      * @param context Describes the current state the converter is in.
      */
     public onConverterResolveBegin(context: Readonly<Context>): void {
-        const merger =
-            this.options.mode === "project" ? new ProjectMerger(context.project) : new ModuleMerger(context.project);
-        merger.execute();
+        this.createMerger(context.project)?.execute();
+    }
+
+    /**
+     * Creates a merger object for the given project.
+     * @param project The project on which the merger should operate.
+     * @returns The merger object, or undefined if the plugin is turned off.
+     */
+    private createMerger(project: ProjectReflection): ProjectMerger | ModuleMerger | undefined {
+        if (this.options.mode === "project") {
+            return new ProjectMerger(project);
+        } else if (this.options.mode === "module") {
+            return new ModuleMerger(project);
+        }
+
+        return undefined;
     }
 }

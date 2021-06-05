@@ -37,7 +37,7 @@ The following options are added to TypeDoc when the plugin is installed:
 | Name & Format | Description | Default |
 | ------------- | ----------- | ------- |
 | **mergeModulesRenameDefaults** `<boolean>` | Defines if the plugin should rename default exports to their original name. | `true` |
-| **mergeModulesMergeMode** `<"project"\|"module">` | Defines if the plugin should merge all modules into the project or if it should merge modules based on their module annotation. | `"project"` |
+| **mergeModulesMergeMode** `<"project"\|"module"|"off">` | Defines if the plugin should merge all modules into the project or if it should merge modules based on their name or module annotation. You can use the value `"off"` to disable the plugin. | `"project"` |
 
 ## Bugs
 
