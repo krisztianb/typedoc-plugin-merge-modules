@@ -46,10 +46,11 @@ Thanks for your contribution!
 
 ## Credits
 
-Special thanks go to the following people that influenced this project:
+Special thanks go to the following people that contributed to this project:
 
 -   [Gerrit Birkeland](https://github.com/Gerrit0) for the suggested solution and code example.
 -   [Felipe Santos](https://github.com/felipecrs) for suggesting improvements.
+-   [Sho Otani](https://github.com/beijaflor) for implementing the merging of modules by name.
 
 ## Donate
 
