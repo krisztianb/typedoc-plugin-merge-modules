@@ -17,6 +17,14 @@ export class Plugin {
     private readonly options = new PluginOptions();
 
     /**
+     * Returns if the plugin is enabled.
+     * @returns True if the plugin is enabled, otherwise false.
+     */
+    public get isEnabled(): boolean {
+        return this.options.mode !== "off";
+    }
+
+    /**
      * Initializes the plugin.
      * @param typedoc The TypeDoc application.
      */
@@ -59,6 +67,7 @@ export class Plugin {
         node?: Readonly<ts.Node>,
     ): void {
         if (
+            this.isEnabled &&
             this.options.renameDefaults &&
             reflection.name === "default" &&
             node &&
@@ -74,7 +83,9 @@ export class Plugin {
      * @param context Describes the current state the converter is in.
      */
     public onConverterResolveBegin(context: Readonly<Context>): void {
-        this.createMerger(context.project)?.execute();
+        if (this.isEnabled) {
+            this.createMerger(context.project)?.execute();
+        }
     }
 
     /**
