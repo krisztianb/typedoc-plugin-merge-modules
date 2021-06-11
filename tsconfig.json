@@ -3,6 +3,7 @@
         "module": "commonjs",
         "outDir": "dist",
         "strict": true,
+        "noImplicitOverride": true,
         "target": "es2015"
     },
     "include": ["src"]
