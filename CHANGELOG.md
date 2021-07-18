@@ -7,33 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.0] - 2021-07-18
+### Breaking Changes
+-   Support changed to TypeDoc verions >=0.21.0 due to a breaking change in TypeDoc's API.
+
 ## [2.1.1] - 2021-06-07
-
 ### Fixed
-
 -   Plugin would rename default exports when setting option `mergeModulesMergeMode` to `off`.
 
 ## [2.1.0] - 2021-06-06
-
 ### Added
-
 -   New option `mergeModulesMergeMode` to merge by module names or to turn the plugin off.
 
 ## [2.0.0] - 2021-03-13
-
 ### Added
-
 -   New option `mergeModulesRenameDefaults` to rename default exports.
-
 ### Breaking Changes
-
 -   New option `mergeModulesRenameDefaults` is `true` by default.
 
 ## [1.0.0] - 2021-01-30
 
 First release
 
-[unreleased]: https://github.com/krisztianb/typedoc-plugin-merge-modules/compare/v2.1.1...HEAD
+[unreleased]: https://github.com/krisztianb/typedoc-plugin-merge-modules/compare/v3.0.0...HEAD
+[3.0.0]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v3.0.0
 [2.1.1]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v2.1.1
 [2.1.0]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v2.1.0
 [2.0.0]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v2.0.0

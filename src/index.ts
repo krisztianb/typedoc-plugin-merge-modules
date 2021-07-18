@@ -1,10 +1,10 @@
-import { PluginHost } from "typedoc/dist/lib/utils";
+import { Application } from "typedoc/dist/lib/application";
 import { Plugin } from "./plugin";
 
 /**
  * Initializes the plugin.
- * @param host Reference to the host that is loading the plugin.
+ * @param app Reference to the application that is loading the plugin.
  */
-export function load(host: Readonly<PluginHost>): void {
-    new Plugin().initialize(host.application);
+export function load(app: Readonly<Application>): void {
+    new Plugin().initialize(app);
 }

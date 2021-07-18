@@ -52,7 +52,7 @@ export class Plugin {
      * @param context Describes the current state the converter is in.
      */
     public onConverterBegin(context: Readonly<Context>): void {
-        this.options.readValuesFromApplication(context.converter.owner.application);
+        this.options.readValuesFromApplication(context.converter.owner);
     }
 
     /**
