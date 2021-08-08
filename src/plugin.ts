@@ -71,7 +71,10 @@ export class Plugin {
             this.options.renameDefaults &&
             reflection.name === "default" &&
             node &&
-            (ts.isVariableDeclaration(node) || ts.isClassDeclaration(node) || ts.isFunctionDeclaration(node)) &&
+            (ts.isVariableDeclaration(node) ||
+                ts.isFunctionDeclaration(node) ||
+                ts.isClassDeclaration(node) ||
+                ts.isInterfaceDeclaration(node)) &&
             node.name
         ) {
             reflection.name = node.name.getText();
