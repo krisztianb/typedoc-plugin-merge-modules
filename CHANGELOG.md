@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [3.0.0] - 2021-07-18
 ### Breaking Changes
--   Support changed to TypeDoc verions >=0.21.0 due to a breaking change in TypeDoc's API.
+-   Support changed to TypeDoc versions >=0.21.0 due to a breaking change in TypeDoc's API.
 
 ## [2.1.1] - 2021-06-07
 ### Fixed
