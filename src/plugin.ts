@@ -1,5 +1,4 @@
-import { Application, ProjectReflection, Reflection } from "typedoc";
-import { Context, Converter } from "typedoc/dist/lib/converter";
+import { Application, Context, Converter, ProjectReflection, Reflection } from "typedoc";
 import * as ts from "typescript";
 import { ModuleMerger } from "./merger/module_merger";
 import { ProjectMerger } from "./merger/project_merger";
