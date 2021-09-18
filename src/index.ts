@@ -1,4 +1,4 @@
-import { Application } from "typedoc/dist/lib/application";
+import { Application } from "typedoc";
 import { Plugin } from "./plugin";
 
 /**
