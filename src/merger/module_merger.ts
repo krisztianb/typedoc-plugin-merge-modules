@@ -61,7 +61,7 @@ export class ModuleMerger {
 
         // remove rest modules
         for (let i = 1; i < modules.length; ++i) {
-            modules[i].children = undefined;
+            delete modules[i].children;
             this.project.removeReflection(modules[i]);
         }
     }

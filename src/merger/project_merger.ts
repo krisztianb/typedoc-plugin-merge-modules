@@ -35,7 +35,7 @@ export class ProjectMerger {
                     }
                 }
 
-                mod.children = undefined;
+                delete mod.children;
                 this.project.removeReflection(mod);
             }
         }
