@@ -9,8 +9,8 @@ type Mode = "project" | "module" | "off";
 declare module "typedoc" {
     // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- This is not a separate type.
     export interface TypeDocOptionMap {
-        mergeModulesRenameDefaults?: boolean;
-        mergeModulesMergeMode?: Mode;
+        mergeModulesRenameDefaults: boolean;
+        mergeModulesMergeMode: Mode;
     }
 }
 
@@ -71,7 +71,7 @@ export class PluginOptions {
      * @param typedoc The TypeDoc application.
      */
     public readValuesFromApplication(typedoc: Readonly<Application>): void {
-        this._renameDefaults = typedoc.options.getValue("mergeModulesRenameDefaults") ?? this._renameDefaults;
-        this._mode = typedoc.options.getValue("mergeModulesMergeMode") ?? this._mode;
+        this._renameDefaults = typedoc.options.getValue("mergeModulesRenameDefaults");
+        this._mode = typedoc.options.getValue("mergeModulesMergeMode");
     }
 }
