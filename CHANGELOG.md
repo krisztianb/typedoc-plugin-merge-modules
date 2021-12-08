@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.1.0] - 2021-12-08
+### Added
+-   When merging modules by name you can use the comment tag `@mergeTarget` to define the module into which the other
+    modules with the same name should be merged. The comment of this module is used in the resulting module.
+
 ## [3.0.2] - 2021-09-18
 ### Added
 -   Add support for TypeDoc version 0.22.
@@ -37,7 +42,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 First release
 
-[unreleased]: https://github.com/krisztianb/typedoc-plugin-merge-modules/compare/v3.0.2...HEAD
+[unreleased]: https://github.com/krisztianb/typedoc-plugin-merge-modules/compare/v3.1.0...HEAD
+[3.1.0]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v3.1.0
 [3.0.2]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v3.0.2
 [3.0.1]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v3.0.1
 [3.0.0]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v3.0.0
