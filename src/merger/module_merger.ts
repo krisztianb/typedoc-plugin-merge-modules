@@ -1,4 +1,5 @@
-import { DeclarationReflection, ProjectReflection, ReflectionKind } from "typedoc";
+import { ProjectReflection, ReflectionKind } from "typedoc";
+import { ModuleBundle } from "./module_bundle";
 
 /**
  * Merger that merges the content of modules based on their JSDoc module annotation.
@@ -19,50 +20,26 @@ export class ModuleMerger {
      * Performs the merging routine.
      */
     public execute(): void {
-        const moduleCombinations = this.createModuleCombinations();
-
-        for (const name in moduleCombinations) {
-            this.mergeModules(moduleCombinations[name]);
-        }
+        const moduleBundles = this.createModuleBundles();
+        moduleBundles.forEach((bundle) => bundle.merge());
     }
 
     /**
      * Creates an object describing which modules of the project should be merged.
-     * @returns The object describing which modules should be merged.
+     * @returns The collection of module bundles.
      */
-    private createModuleCombinations(): Record<string, DeclarationReflection[]> {
+    private createModuleBundles(): ModuleBundle[] {
         const modules = (this.project.children ?? []).filter((c) => c.kindOf(ReflectionKind.Module));
-        const result: ReturnType<ModuleMerger["createModuleCombinations"]> = {};
+        const moduleBundleMap = new Map<string, ModuleBundle>();
 
         for (const module of modules) {
-            if (Array.isArray(result[module.name])) {
-                result[module.name].push(module);
-            } else {
-                result[module.name] = [module];
+            if (!moduleBundleMap.has(module.name)) {
+                moduleBundleMap.set(module.name, new ModuleBundle(module.name, this.project));
             }
+
+            moduleBundleMap.get(module.name)?.add(module);
         }
 
-        return result;
-    }
-
-    /**
-     * Merges the provided modules within the project into one module.
-     * @param modules The modules which should be merged into one module.
-     */
-    private mergeModules(modules: DeclarationReflection[]): void {
-        const childrenOfAllModules = modules
-            .map((m) => m.children)
-            .filter((m): m is DeclarationReflection[] => m !== undefined)
-            .reduce((acc, val) => acc.concat(val), []);
-
-        // use first module as a principle module
-        childrenOfAllModules.forEach((child) => (child.parent = modules[0]));
-        modules[0].children = childrenOfAllModules;
-
-        // remove rest modules
-        for (let i = 1; i < modules.length; ++i) {
-            delete modules[i].children;
-            this.project.removeReflection(modules[i]);
-        }
+        return [...moduleBundleMap.values()];
     }
 }
