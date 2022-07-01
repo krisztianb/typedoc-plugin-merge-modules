@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.0.0] - 2022-07-??
+### Breaking Changes
+-   Support changed to TypeDoc versions 0.23.x due to a breaking change in TypeDoc's API.
+
 ## [3.1.0] - 2021-12-08
 ### Added
 -   When merging modules by name you can use the comment tag `@mergeTarget` to define the module into which the other

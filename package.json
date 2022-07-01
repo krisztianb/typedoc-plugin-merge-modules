@@ -1,6 +1,6 @@
 {
     "name": "typedoc-plugin-merge-modules",
-    "version": "3.1.0",
+    "version": "4.0.0",
     "description": "Plugin for TypeDoc that merges the content of modules.",
     "author": {
         "name": "Krisztián Balla",
@@ -20,11 +20,11 @@
         "eslint-plugin-unicorn": "43.0.0",
         "prettier": "2.7.1",
         "rimraf": "3.0.2",
-        "typedoc": "0.22.10",
+        "typedoc": "0.23.2",
         "typescript": "4.7.4"
     },
     "peerDependencies": {
-        "typedoc": "0.21.x || 0.22.x"
+        "typedoc": "0.23.x"
     },
     "repository": {
         "type": "git",

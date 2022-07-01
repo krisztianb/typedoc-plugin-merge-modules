@@ -8,9 +8,9 @@ import { DeclarationReflection } from "typedoc";
 export function removeTagFromCommentsOf(reflection: DeclarationReflection, tagToRemove: string): void {
     tagToRemove = tagToRemove.toLowerCase();
 
-    const tagIndex = reflection.comment?.tags.findIndex((tag) => tag.tagName.toLowerCase() === tagToRemove) ?? -1;
+    const tagIndex = reflection.comment?.blockTags.findIndex((tag) => tag.name?.toLowerCase() === tagToRemove) ?? -1;
 
     if (tagIndex !== -1) {
-        reflection.comment?.tags.splice(tagIndex, 1);
+        reflection.comment?.blockTags.splice(tagIndex, 1);
     }
 }

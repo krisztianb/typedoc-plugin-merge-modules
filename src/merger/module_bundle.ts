@@ -72,8 +72,8 @@ export class ModuleBundle {
         // 1. search for the first module which is marked with a specific tag
         const firstModuleWithTargetTag = this.modules.find(
             (module) =>
-                module.comment?.tags.findIndex(
-                    (tag) => tag.tagName.toLowerCase() === targetModuleCommentTagName.toLowerCase(),
+                module.comment?.blockTags.findIndex(
+                    (tag) => tag.name?.toLowerCase() === targetModuleCommentTagName.toLowerCase(),
                 ) !== -1,
         );
 
@@ -82,7 +82,7 @@ export class ModuleBundle {
         }
 
         // 2. search for the first module with a comment
-        const firstModuleWithComment = this.modules.find((module) => module.comment?.shortText);
+        const firstModuleWithComment = this.modules.find((module) => (module.comment?.summary.length ?? 0) > 0);
 
         if (firstModuleWithComment) {
             return firstModuleWithComment;
