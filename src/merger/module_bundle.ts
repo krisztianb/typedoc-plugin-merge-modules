@@ -5,7 +5,7 @@ import { removeTagFromCommentsOf } from "./utils";
  * Name of the comment tag that can be used to mark a module as the target module within the bundle.
  * The target module is the one into which all the modules of the bundle are merged.
  */
-const targetModuleCommentTagName = "mergeTarget";
+const targetModuleCommentTag = "@mergeTarget";
 
 /**
  * Class representing a group of modules.
@@ -49,7 +49,7 @@ export class ModuleBundle {
 
         // get target module
         const targetModule = this.getTargetModule();
-        removeTagFromCommentsOf(targetModule, targetModuleCommentTagName);
+        removeTagFromCommentsOf(targetModule, targetModuleCommentTag);
 
         // set target module for all children
         childrenOfAllModules.forEach((child) => (child.parent = targetModule));
@@ -72,9 +72,8 @@ export class ModuleBundle {
         // 1. search for the first module which is marked with a specific tag
         const firstModuleWithTargetTag = this.modules.find(
             (module) =>
-                module.comment?.blockTags.findIndex(
-                    (tag) => tag.name?.toLowerCase() === targetModuleCommentTagName.toLowerCase(),
-                ) !== -1,
+                module.comment &&
+                module.comment.blockTags.findIndex((commentTag) => commentTag.tag === targetModuleCommentTag) !== -1,
         );
 
         if (firstModuleWithTargetTag) {
