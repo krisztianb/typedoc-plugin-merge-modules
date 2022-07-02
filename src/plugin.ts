@@ -1,4 +1,5 @@
 import { Application, Context, Converter, DeclarationReflection, ProjectReflection, ReflectionKind } from "typedoc";
+import { ModuleCategoryMerger } from "./merger/module_category_merger";
 import { ModuleMerger } from "./merger/module_merger";
 import { ProjectMerger } from "./merger/project_merger";
 import { PluginOptions } from "./plugin_options";
@@ -99,6 +100,8 @@ export class Plugin {
             return new ProjectMerger(project);
         } else if (this.options.mode === "module") {
             return new ModuleMerger(project);
+        } else if (this.options.mode === "module-category") {
+            return new ModuleCategoryMerger(project);
         }
 
         return undefined;

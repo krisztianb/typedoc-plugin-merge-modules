@@ -6,9 +6,7 @@ import { DeclarationReflection } from "typedoc";
  * @param tagToRemove Name of the tag to be removed.
  */
 export function removeTagFromCommentsOf(reflection: DeclarationReflection, tagToRemove: string): void {
-    tagToRemove = tagToRemove.toLowerCase();
-
-    const tagIndex = reflection.comment?.blockTags.findIndex((tag) => tag.name?.toLowerCase() === tagToRemove) ?? -1;
+    const tagIndex = reflection.comment?.blockTags.findIndex((ct) => ct.tag === tagToRemove) ?? -1;
 
     if (tagIndex !== -1) {
         reflection.comment?.blockTags.splice(tagIndex, 1);

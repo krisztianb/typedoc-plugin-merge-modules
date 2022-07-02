@@ -11,9 +11,6 @@ const targetModuleCommentTag = "@mergeTarget";
  * Class representing a group of modules.
  */
 export class ModuleBundle {
-    /** The name of the module bundle. */
-    private readonly name: string;
-
     /** The project in which all modules are in. */
     private readonly project: ProjectReflection;
 
@@ -22,11 +19,9 @@ export class ModuleBundle {
 
     /**
      * Creates a new module bundle instance.
-     * @param name The name of the module bundle.
      * @param project The project in which all modules are in.
      */
-    public constructor(name: string, project: ProjectReflection) {
-        this.name = name;
+    public constructor(project: ProjectReflection) {
         this.project = project;
     }
 
@@ -72,8 +67,7 @@ export class ModuleBundle {
         // 1. search for the first module which is marked with a specific tag
         const firstModuleWithTargetTag = this.modules.find(
             (module) =>
-                module.comment &&
-                module.comment.blockTags.findIndex((commentTag) => commentTag.tag === targetModuleCommentTag) !== -1,
+                module.comment && module.comment.blockTags.findIndex((ct) => ct.tag === targetModuleCommentTag) !== -1,
         );
 
         if (firstModuleWithTargetTag) {

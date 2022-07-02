@@ -37,9 +37,9 @@ The following options are added to TypeDoc when the plugin is installed:
 | Name & Format | Description | Default |
 | ------------- | ----------- | ------- |
 | **mergeModulesRenameDefaults** `<boolean>` | Defines if the plugin should rename default exports to their original name. | `true` |
-| **mergeModulesMergeMode** `<"project"\|"module"\|"off">` | Defines if the plugin should merge all modules into the project or if it should merge modules based on their name or module annotation. You can use the value `"off"` to disable the plugin. | `"project"` |
+| **mergeModulesMergeMode** `<"project"\|"module"\|"module-category"\|"off">` | Defines if the plugin should merge all modules into the project or if it should merge modules based on their name or module annotation. The value `"module-category"` is the same as `"module"` but will only merge modules that are in the same category (comment tag `@category`). You can use the value `"off"` to disable the plugin. | `"project"` |
 
-When using `mergeModulesMergeMode: module` in combination with [module comments](https://typedoc.org/guides/doccomments/#files) you should add the tag `@mergeTarget` to the comment of the module whose comment should be used in the merge result.
+When using `mergeModulesMergeMode: module OR module-category` in combination with [module comments](https://typedoc.org/guides/doccomments/#files) you should add the tag `@mergeTarget` to the comment of the module whose comment should be used in the merge result.
 
 ## Bugs
 

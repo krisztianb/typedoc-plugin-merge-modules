@@ -1,4 +1,4 @@
-import { ProjectReflection, ReflectionKind } from "typedoc";
+import { DeclarationReflection, ProjectReflection, ReflectionKind } from "typedoc";
 import { ModuleBundle } from "./module_bundle";
 
 /**
@@ -6,7 +6,7 @@ import { ModuleBundle } from "./module_bundle";
  */
 export class ModuleMerger {
     /** The project whose modules are merged. */
-    private readonly project: ProjectReflection;
+    protected readonly project: ProjectReflection;
 
     /**
      * Creates a new merger instance.
@@ -25,19 +25,31 @@ export class ModuleMerger {
     }
 
     /**
+     * Creates an identifier for the module's bundle.
+     * @param module The module for which the identifier is generated.
+     * @returns The identifier for the module's bundle.
+     */
+    // eslint-disable-next-line class-methods-use-this
+    protected createModuleBundleId(module: DeclarationReflection): string {
+        return module.name;
+    }
+
+    /**
      * Creates an object describing which modules of the project should be merged.
      * @returns The collection of module bundles.
      */
-    private createModuleBundles(): ModuleBundle[] {
+    protected createModuleBundles(): ModuleBundle[] {
         const modules = (this.project.children ?? []).filter((c) => c.kindOf(ReflectionKind.Module));
         const moduleBundleMap = new Map<string, ModuleBundle>();
 
         for (const module of modules) {
-            if (!moduleBundleMap.has(module.name)) {
-                moduleBundleMap.set(module.name, new ModuleBundle(module.name, this.project));
+            const bundleId = this.createModuleBundleId(module);
+
+            if (!moduleBundleMap.has(bundleId)) {
+                moduleBundleMap.set(bundleId, new ModuleBundle(this.project));
             }
 
-            moduleBundleMap.get(module.name)?.add(module);
+            moduleBundleMap.get(bundleId)?.add(module);
         }
 
         return [...moduleBundleMap.values()];
