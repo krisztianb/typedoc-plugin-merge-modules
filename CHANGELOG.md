@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [4.0.0] - 2022-07-??
+## [4.0.0] - 2022-07-03
 ### Breaking Changes
 -   Support changed to TypeDoc versions 0.23.x due to a breaking change in TypeDoc's API.
+### Added
+-   Option `mergeModulesMergeMode` now has a new value `module-category` to merge modules with the same name but only
+    if they are within the same category.
+### Fixed
+-   Renaming of default exports now also works for: enums, object literals, type literals and type aliases.
 
 ## [3.1.0] - 2021-12-08
 ### Added
@@ -46,7 +51,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 First release
 
-[unreleased]: https://github.com/krisztianb/typedoc-plugin-merge-modules/compare/v3.1.0...HEAD
+[unreleased]: https://github.com/krisztianb/typedoc-plugin-merge-modules/compare/v4.0.0...HEAD
+[4.0.0]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v4.0.0
 [3.1.0]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v3.1.0
 [3.0.2]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v3.0.2
 [3.0.1]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v3.0.1

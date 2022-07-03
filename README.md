@@ -37,9 +37,13 @@ The following options are added to TypeDoc when the plugin is installed:
 | Name & Format | Description | Default |
 | ------------- | ----------- | ------- |
 | **mergeModulesRenameDefaults** `<boolean>` | Defines if the plugin should rename default exports to their original name. | `true` |
-| **mergeModulesMergeMode** `<"project"\|"module"\|"module-category"\|"off">` | Defines if the plugin should merge all modules into the project or if it should merge modules based on their name or module annotation. The value `"module-category"` is the same as `"module"` but will only merge modules that are in the same category (comment tag `@category`). You can use the value `"off"` to disable the plugin. | `"project"` |
+| **mergeModulesMergeMode** `<"project"\|"module"\|"module-category"\|"off">` | Defines how the plugin should merge modules:
+- `"project"` = The plugin merges the content of all modules into the project root.
+- `"module"` = The plugin merges modules with the same name. By default the filename is the module name, which you can overwrite using [module comments](https://typedoc.org/tags/module/).
+- `"module-category"` = Same as `"module"` but will only merge modules that have the same [category](https://typedoc.org/tags/category/).
+- `"off"` =  Disables the plugin. | `"project"` |
 
-When using `mergeModulesMergeMode: module OR module-category` in combination with [module comments](https://typedoc.org/guides/doccomments/#files) you should add the tag `@mergeTarget` to the comment of the module whose comment should be used in the merge result.
+When you set `mergeModulesMergeMode` to `"module"` OR `"module-category"` in combination with [module comments](https://typedoc.org/tags/module/) you should add the tag `@mergeTarget` to the comment of the module whose comment should be used in the merge result.
 
 ## Bugs
 
