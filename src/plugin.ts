@@ -1,5 +1,5 @@
-import { Application, Context, Converter, ProjectReflection, Reflection } from "typedoc";
-import * as ts from "typescript";
+import { Application, Context, Converter, DeclarationReflection, ProjectReflection, ReflectionKind } from "typedoc";
+import { ModuleCategoryMerger } from "./merger/module_category_merger";
 import { ModuleMerger } from "./merger/module_merger";
 import { ProjectMerger } from "./merger/project_merger";
 import { PluginOptions } from "./plugin_options";
@@ -39,9 +39,8 @@ export class Plugin {
      */
     private subscribeToApplicationEvents(typedoc: Readonly<Application>): void {
         typedoc.converter.on(Converter.EVENT_BEGIN, (c: Readonly<Context>) => this.onConverterBegin(c));
-        typedoc.converter.on(
-            Converter.EVENT_CREATE_DECLARATION,
-            (c: Readonly<Context>, r: Reflection, n?: Readonly<ts.Node>) => this.onConverterCreateDeclaration(c, r, n),
+        typedoc.converter.on(Converter.EVENT_CREATE_DECLARATION, (c: Readonly<Context>, r: DeclarationReflection) =>
+            this.onConverterCreateDeclaration(c, r),
         );
         typedoc.converter.on(Converter.EVENT_RESOLVE_BEGIN, (c: Readonly<Context>) => this.onConverterResolveBegin(c));
     }
@@ -56,27 +55,28 @@ export class Plugin {
 
     /**
      * Triggered when the converter has created a declaration reflection.
-     * @param _context Describes the current state the converter is in.
+     * @param context Describes the current state the converter is in.
      * @param reflection The reflection that has been created.
-     * @param node The triggering TypeScript node if available.
      */
-    public onConverterCreateDeclaration(
-        _context: Readonly<Context>,
-        reflection: Reflection,
-        node?: Readonly<ts.Node>,
-    ): void {
+    public onConverterCreateDeclaration(context: Readonly<Context>, reflection: DeclarationReflection): void {
         if (
             this.isEnabled &&
             this.options.renameDefaults &&
             reflection.name === "default" &&
-            node &&
-            (ts.isVariableDeclaration(node) ||
-                ts.isFunctionDeclaration(node) ||
-                ts.isClassDeclaration(node) ||
-                ts.isInterfaceDeclaration(node)) &&
-            node.name
+            reflection.kindOf(
+                ReflectionKind.ClassOrInterface |
+                    ReflectionKind.Enum |
+                    ReflectionKind.Function |
+                    ReflectionKind.ObjectLiteral |
+                    ReflectionKind.TypeAlias |
+                    ReflectionKind.TypeLiteral |
+                    ReflectionKind.Variable,
+            )
         ) {
-            reflection.name = node.name.getText();
+            const originalName = context.project.getSymbolFromReflection(reflection)?.name;
+            if (originalName) {
+                reflection.name = originalName;
+            }
         }
     }
 
@@ -100,6 +100,8 @@ export class Plugin {
             return new ProjectMerger(project);
         } else if (this.options.mode === "module") {
             return new ModuleMerger(project);
+        } else if (this.options.mode === "module-category") {
+            return new ModuleCategoryMerger(project);
         }
 
         return undefined;
