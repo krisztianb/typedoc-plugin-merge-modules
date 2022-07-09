@@ -3,6 +3,7 @@ import { ModuleCategoryMerger } from "./merger/module_category_merger";
 import { ModuleMerger } from "./merger/module_merger";
 import { ProjectMerger } from "./merger/project_merger";
 import { PluginOptions } from "./plugin_options";
+import { tryGetOriginalReflectionName } from "./utils";
 
 /**
  * The "Merge Modules" plugin.
@@ -73,7 +74,8 @@ export class Plugin {
                     ReflectionKind.Variable,
             )
         ) {
-            const originalName = context.project.getSymbolFromReflection(reflection)?.name;
+            const originalName = tryGetOriginalReflectionName(context, reflection);
+
             if (originalName) {
                 reflection.name = originalName;
             }

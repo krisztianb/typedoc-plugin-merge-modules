@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.0.1] - 2022-07-09
+### Fixed
+-   Plugin doesn't rename certain types of default exports.
+
 ## [4.0.0] - 2022-07-03
 ### Breaking Changes
 -   Support changed to TypeDoc versions 0.23.x due to a breaking change in TypeDoc's API.
@@ -51,7 +55,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 First release
 
-[unreleased]: https://github.com/krisztianb/typedoc-plugin-merge-modules/compare/v4.0.0...HEAD
+[unreleased]: https://github.com/krisztianb/typedoc-plugin-merge-modules/compare/v4.0.1...HEAD
+[4.0.1]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v4.0.1
 [4.0.0]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v4.0.0
 [3.1.0]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v3.1.0
 [3.0.2]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v3.0.2

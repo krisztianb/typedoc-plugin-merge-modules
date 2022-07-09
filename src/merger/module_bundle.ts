@@ -1,5 +1,5 @@
 import { DeclarationReflection, ProjectReflection } from "typedoc";
-import { removeTagFromCommentsOf } from "./utils";
+import { removeTagFromCommentsOf } from "../utils";
 
 /**
  * Name of the comment tag that can be used to mark a module as the target module within the bundle.
