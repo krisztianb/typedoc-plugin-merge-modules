@@ -35,10 +35,8 @@
         "/dist"
     ],
     "scripts": {
-        "lint": "npx eslint ./src",
-        "format": "npx prettier --check ./src",
-        "clean": "rimraf dist",
-        "build": "npx tsc",
-        "clean-build": "npm run clean && npm run build"
+        "lint": "eslint ./src",
+        "format": "prettier --check ./src",
+        "build": "rimraf dist && tsc"
     }
 }
