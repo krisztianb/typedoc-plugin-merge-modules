@@ -9,17 +9,6 @@ Use cases:
 * If you want to document an entire application and not a library, you can specify all files that you want to have documented as entry points for TypeDoc and use this plugin to merge all modules into the project root removing the extra module layer.
 * If you want to merge the content of some modules in the TypeDoc output, you can use this plugin and [module annotations](https://typedoc.org/guides/doccomments/#files) in your files to specify which modules should be combined.
 
-## Installation
-
-This module can be installed using [npm](https://www.npmjs.com/package/typedoc-plugin-merge-modules):
-
-```sh
-$ npm install typedoc-plugin-merge-modules --save-dev
-```
-
-TypeDoc automatically detects plugins installed via npm. After installation TypeDoc can be used normally and you can
-configure this plugin as described below.
-
 ## Example
 
 When running TypeDoc with two module files `module1.ts` and `module2.ts` as entry points produces the following result:
@@ -29,6 +18,21 @@ When running TypeDoc with two module files `module1.ts` and `module2.ts` as entr
 Using this plugin will make the result look like this:
 
 ![After](https://raw.githubusercontent.com/krisztianb/typedoc-plugin-merge-modules/master/doc/after-example.png)
+
+## Installation
+
+This module can be installed using [npm](https://www.npmjs.com/package/typedoc-plugin-merge-modules):
+
+```sh
+$ npm install typedoc-plugin-merge-modules --save-dev
+```
+
+The plugin requires TypeDoc version 0.23.x or 0.24.x to be installed.
+
+Version **0.23.x** of TypeDoc automatically detects plugins installed via npm.
+If you are using version **0.24.x** of TypeDoc you need to [activate the plugin with a command line argument](https://typedoc.org/options/configuration/#plugin).
+
+After installation TypeDoc can be used normally and you can configure this plugin as described below.
 
 ## Options
 
