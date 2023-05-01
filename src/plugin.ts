@@ -1,4 +1,12 @@
-import { Application, Context, Converter, DeclarationReflection, ProjectReflection, ReflectionKind } from "typedoc";
+import {
+    Application,
+    Context,
+    Converter,
+    DeclarationReflection,
+    EntryPointStrategy,
+    ProjectReflection,
+    ReflectionKind,
+} from "typedoc";
 import { ModuleCategoryMerger } from "./merger/module_category_merger";
 import { ModuleMerger } from "./merger/module_merger";
 import { ProjectMerger } from "./merger/project_merger";
@@ -43,7 +51,19 @@ export class Plugin {
         typedoc.converter.on(Converter.EVENT_CREATE_DECLARATION, (c: Readonly<Context>, r: DeclarationReflection) =>
             this.onConverterCreateDeclaration(c, r),
         );
-        typedoc.on(Application.EVENT_PROJECT_REVIVE, (c: Readonly<Context>) => this.onApplicationProjectRevive(c));
+
+        // When TypeDoc is running with the following entry point strategies, it will create a separate converter
+        // and trigger the "Converter.EVENT_RESOLVE_BEGIN" event for each package that it merges.
+        // So for these strategies we need to subscribe to an event that is triggered after this merge is complete.
+        const typeDocUsesMultipleConverters =
+            typedoc.entryPointStrategy === EntryPointStrategy.Merge ||
+            typedoc.entryPointStrategy === EntryPointStrategy.Packages;
+
+        if (typeDocUsesMultipleConverters) {
+            typedoc.on(Application.EVENT_PROJECT_REVIVE, (c: Readonly<Context>) => this.onConvertersDone(c));
+        } else {
+            typedoc.converter.on(Converter.EVENT_RESOLVE_BEGIN, (c: Readonly<Context>) => this.onConvertersDone(c));
+        }
     }
 
     /**
@@ -83,10 +103,10 @@ export class Plugin {
     }
 
     /**
-     * Triggered after a project has been deserialized.
+     * Triggered after all converters are done.
      * @param context Describes the current state the converter is in.
      */
-    public onApplicationProjectRevive(context: Readonly<Context>): void {
+    public onConvertersDone(context: Readonly<Context>): void {
         if (this.isEnabled) {
             this.createMerger(context.project)?.execute();
         }
