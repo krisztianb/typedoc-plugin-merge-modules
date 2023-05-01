@@ -39,18 +39,18 @@ export class Plugin {
      * @param typedoc The TypeDoc application.
      */
     private subscribeToApplicationEvents(typedoc: Readonly<Application>): void {
-        typedoc.converter.on(Converter.EVENT_BEGIN, (c: Readonly<Context>) => this.onConverterBegin(c));
+        typedoc.on(Application.EVENT_BOOTSTRAP_END, (c: Readonly<Context>) => this.onApplicationBootstrapEnd(c));
         typedoc.converter.on(Converter.EVENT_CREATE_DECLARATION, (c: Readonly<Context>, r: DeclarationReflection) =>
             this.onConverterCreateDeclaration(c, r),
         );
-        typedoc.converter.on(Converter.EVENT_RESOLVE_BEGIN, (c: Readonly<Context>) => this.onConverterResolveBegin(c));
+        typedoc.on(Application.EVENT_PROJECT_REVIVE, (c: Readonly<Context>) => this.onApplicationProjectRevive(c));
     }
 
     /**
-     * Triggered when the converter begins converting a project.
+     * Triggered after plugins have been loaded and options have been read.
      * @param context Describes the current state the converter is in.
      */
-    public onConverterBegin(context: Readonly<Context>): void {
+    public onApplicationBootstrapEnd(context: Readonly<Context>): void {
         this.options.readValuesFromApplication(context.converter.owner);
     }
 
@@ -83,10 +83,10 @@ export class Plugin {
     }
 
     /**
-     * Triggered when the TypeDoc converter begins resolving a project.
+     * Triggered after a project has been deserialized.
      * @param context Describes the current state the converter is in.
      */
-    public onConverterResolveBegin(context: Readonly<Context>): void {
+    public onApplicationProjectRevive(context: Readonly<Context>): void {
         if (this.isEnabled) {
             this.createMerger(context.project)?.execute();
         }
