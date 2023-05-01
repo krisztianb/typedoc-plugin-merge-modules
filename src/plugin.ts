@@ -1,4 +1,12 @@
-import { Application, Context, Converter, DeclarationReflection, ProjectReflection, ReflectionKind } from "typedoc";
+import {
+    Application,
+    Context,
+    Converter,
+    DeclarationReflection,
+    EntryPointStrategy,
+    ProjectReflection,
+    ReflectionKind,
+} from "typedoc";
 import { ModuleCategoryMerger } from "./merger/module_category_merger";
 import { ModuleMerger } from "./merger/module_merger";
 import { ProjectMerger } from "./merger/project_merger";
@@ -39,18 +47,30 @@ export class Plugin {
      * @param typedoc The TypeDoc application.
      */
     private subscribeToApplicationEvents(typedoc: Readonly<Application>): void {
-        typedoc.converter.on(Converter.EVENT_BEGIN, (c: Readonly<Context>) => this.onConverterBegin(c));
+        typedoc.on(Application.EVENT_BOOTSTRAP_END, (c: Readonly<Context>) => this.onApplicationBootstrapEnd(c));
         typedoc.converter.on(Converter.EVENT_CREATE_DECLARATION, (c: Readonly<Context>, r: DeclarationReflection) =>
             this.onConverterCreateDeclaration(c, r),
         );
-        typedoc.converter.on(Converter.EVENT_RESOLVE_BEGIN, (c: Readonly<Context>) => this.onConverterResolveBegin(c));
+
+        // When TypeDoc is running with the following entry point strategies, it will create a separate converter
+        // and trigger the "Converter.EVENT_RESOLVE_BEGIN" event for each package that it merges.
+        // So for these strategies we need to subscribe to an event that is triggered after this merge is complete.
+        const typeDocUsesMultipleConverters =
+            typedoc.entryPointStrategy === EntryPointStrategy.Merge ||
+            typedoc.entryPointStrategy === EntryPointStrategy.Packages;
+
+        if (typeDocUsesMultipleConverters) {
+            typedoc.on(Application.EVENT_PROJECT_REVIVE, (c: Readonly<Context>) => this.onConvertersDone(c));
+        } else {
+            typedoc.converter.on(Converter.EVENT_RESOLVE_BEGIN, (c: Readonly<Context>) => this.onConvertersDone(c));
+        }
     }
 
     /**
-     * Triggered when the converter begins converting a project.
+     * Triggered after plugins have been loaded and options have been read.
      * @param context Describes the current state the converter is in.
      */
-    public onConverterBegin(context: Readonly<Context>): void {
+    public onApplicationBootstrapEnd(context: Readonly<Context>): void {
         this.options.readValuesFromApplication(context.converter.owner);
     }
 
@@ -83,10 +103,10 @@ export class Plugin {
     }
 
     /**
-     * Triggered when the TypeDoc converter begins resolving a project.
+     * Triggered after all converters are done.
      * @param context Describes the current state the converter is in.
      */
-    public onConverterResolveBegin(context: Readonly<Context>): void {
+    public onConvertersDone(context: Readonly<Context>): void {
         if (this.isEnabled) {
             this.createMerger(context.project)?.execute();
         }
