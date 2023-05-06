@@ -25,4 +25,9 @@ rmdir /S /Q .\merge-module\output 2>nul
 call npx typedoc --tsconfig merge-module/tsconfig.json --plugin typedoc-plugin-merge-modules --mergeModulesMergeMode module --entryPointStrategy expand --out merge-module/output ./merge-module/input
 call npx cypress run --spec "merge-module/test.cy.ts"
 
+:: TODO
+:: test module-category merge
+:: test merge for monorepo project
+:: test default export renaming feature
+
 echo ===================================== FINISHED =====================================================
