@@ -1,3 +1,7 @@
 .vscode
 dist
 node_modules
+
+test/merge-module
+test/merge-off
+test/merge-project
