@@ -22,7 +22,7 @@ call npx cypress run --spec "merge-project/test.cy.ts"
 :: Create documentation for MODULE merge
 echo ===================================== TEST MERGE MODULE ============================================
 rmdir /S /Q .\merge-module\output 2>nul
-call npx typedoc --tsconfig merge-module/tsconfig.json --plugin typedoc-plugin-merge-modules --mergeModulesMergeMode module --entryPointStrategy expand --out merge-module/output ./merge-module/input
+call npx typedoc --tsconfig merge-module/tsconfig.json --plugin typedoc-plugin-merge-modules --mergeModulesMergeMode module --entryPointStrategy expand --out merge-module/output merge-module/input
 call npx cypress run --spec "merge-module/test.cy.ts"
 
 :: TODO
