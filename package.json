@@ -12,6 +12,7 @@
         "typedocplugin"
     ],
     "devDependencies": {
+        "@types/mocha": "10.0.1",
         "@types/node": "14.18.0",
         "@typescript-eslint/eslint-plugin": "5.59.0",
         "@typescript-eslint/parser": "5.59.0",

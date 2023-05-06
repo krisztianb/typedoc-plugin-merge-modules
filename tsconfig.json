@@ -2,6 +2,7 @@
     "compilerOptions": {
         "module": "commonjs",
         "outDir": "dist",
+        "baseUrl": "./",
         "strict": true,
         "noImplicitOverride": true,
         "exactOptionalPropertyTypes": true,
