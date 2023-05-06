@@ -2,6 +2,6 @@
 dist
 node_modules
 
-test/merge-module
-test/merge-off
-test/merge-project
+test/merge-module/output
+test/merge-off/output
+test/merge-project/output
