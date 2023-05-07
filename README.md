@@ -11,13 +11,9 @@ Use cases:
 
 ## Example
 
-When running TypeDoc with two module files `module1.ts` and `module2.ts` as entry points produces the following result:
+Here is an example of how the navigation menu of TypeDoc's output changes when merging all modules into the project root using the plugin:
 
-![Before](https://raw.githubusercontent.com/krisztianb/typedoc-plugin-merge-modules/master/doc/before-example.png)
-
-Using this plugin will make the result look like this:
-
-![After](https://raw.githubusercontent.com/krisztianb/typedoc-plugin-merge-modules/master/doc/after-example.png)
+![Example](https://raw.githubusercontent.com/krisztianb/typedoc-plugin-merge-modules/master/doc/example.png)
 
 ## Installation
 
