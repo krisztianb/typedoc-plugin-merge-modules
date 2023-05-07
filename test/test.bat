@@ -42,7 +42,4 @@ echo ===================================== TEST MERGE PROJECT ON MONOREPO ======
 call npx typedoc --tsconfig merge-project-monorepo/tsconfig.json --plugin typedoc-plugin-merge-modules --entryPointStrategy packages --out merge-project-monorepo/output merge-project-monorepo/input/project1 merge-project-monorepo/input/project2
 call npx cypress run --quiet --spec "merge-project-monorepo/test.cy.ts"
 
-:: TODO
-:: test merge for monorepo project
-
 echo ===================================== FINISHED =====================================================
