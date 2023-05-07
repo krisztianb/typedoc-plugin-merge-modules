@@ -3,6 +3,7 @@ dist
 node_modules
 
 test/cypress
-test/merge-module/output
 test/merge-off/output
 test/merge-project/output
+test/merge-module/output
+test/merge-module-category/output
