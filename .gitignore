@@ -7,3 +7,5 @@ test/merge-off/output
 test/merge-project/output
 test/merge-module/output
 test/merge-module-category/output
+test/default-export-rename-on/output
+test/default-export-rename-off/output

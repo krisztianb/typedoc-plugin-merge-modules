@@ -27,8 +27,17 @@ echo ===================================== TEST MERGE MODULE CATEGORY ==========
 call npx typedoc --tsconfig merge-module-category/tsconfig.json --plugin typedoc-plugin-merge-modules --mergeModulesMergeMode module-category --entryPointStrategy expand --out merge-module-category/output merge-module-category/input
 call npx cypress run --spec "merge-module-category/test.cy.ts"
 
+:: Create documentation with DEFAULT EXPORT RENAMING ON
+echo ===================================== TEST DEFAULT EXPORT RENAMING ON ==============================
+call npx typedoc --tsconfig default-export-rename-on/tsconfig.json --plugin typedoc-plugin-merge-modules --mergeModulesRenameDefaults true --entryPointStrategy expand --out default-export-rename-on/output default-export-rename-on/input
+call npx cypress run --spec "default-export-rename-on/test.cy.ts"
+
+:: Create documentation with DEFAULT EXPORT RENAMING OFF
+echo ===================================== TEST DEFAULT EXPORT RENAMING OFF =============================
+call npx typedoc --tsconfig default-export-rename-off/tsconfig.json --plugin typedoc-plugin-merge-modules --mergeModulesRenameDefaults false --entryPointStrategy expand --out default-export-rename-off/output default-export-rename-off/input
+call npx cypress run --spec "default-export-rename-off/test.cy.ts"
+
 :: TODO
-:: test default export renaming feature
 :: test merge for monorepo project
 
 echo ===================================== FINISHED =====================================================
