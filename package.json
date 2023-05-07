@@ -40,7 +40,7 @@
     ],
     "scripts": {
         "lint": "eslint ./src",
-        "format": "prettier --check ./src",
+        "format": "prettier --check ./src ./test",
         "build": "rimraf dist && tsc",
         "test": "cd test  && test.bat"
     }
