@@ -5,6 +5,7 @@ node_modules
 test/cypress
 test/merge-off/output
 test/merge-project/output
+test/merge-project-monorepo/output
 test/merge-module/output
 test/merge-module-category/output
 test/default-export-rename-on/output

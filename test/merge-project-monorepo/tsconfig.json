@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+        "paths": {
+            "project1": ["./input/project1"],
+            "project2": ["./input/project2"]
+        }
+    }
+}
