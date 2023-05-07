@@ -1,3 +1,4 @@
+/// <reference types="cypress" />
 describe("index.html", () => {
     beforeEach(() => {
         cy.visit("./default-export-rename-on/output/index.html");

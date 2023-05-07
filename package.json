@@ -39,7 +39,7 @@
         "CHANGELOG.md"
     ],
     "scripts": {
-        "lint": "eslint ./src",
+        "lint": "eslint ./src ./test",
         "format": "prettier --check ./src ./test",
         "build": "rimraf dist && tsc",
         "test": "cd test  && test.bat"

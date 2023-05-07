@@ -1,3 +1,4 @@
+/// <reference types="cypress" />
 describe("index.html", () => {
     beforeEach(() => {
         cy.visit("./merge-project-monorepo/output/index.html");

@@ -1,3 +1,4 @@
+/// <reference types="cypress" />
 describe("index.html", () => {
     beforeEach(() => {
         cy.visit("./merge-module-category/output/index.html");
