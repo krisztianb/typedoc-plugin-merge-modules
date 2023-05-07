@@ -1,3 +1,4 @@
+/** @module merger */
 import { DeclarationReflection, ProjectReflection } from "typedoc";
 import { removeTagFromCommentsOf } from "../utils";
 

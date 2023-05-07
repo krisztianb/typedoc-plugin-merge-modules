@@ -1,3 +1,4 @@
+/** @module merger */
 import { ProjectReflection, ReflectionKind } from "typedoc";
 
 /**

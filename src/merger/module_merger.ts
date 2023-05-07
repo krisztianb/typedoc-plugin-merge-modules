@@ -1,3 +1,4 @@
+/** @module merger */
 import { DeclarationReflection, ProjectReflection, ReflectionKind } from "typedoc";
 import { ModuleBundle } from "./module_bundle";
 
