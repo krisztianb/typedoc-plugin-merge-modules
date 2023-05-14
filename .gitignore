@@ -8,5 +8,6 @@ test/merge-project/output
 test/merge-project-monorepo/output
 test/merge-module/output
 test/merge-module-category/output
+test/merge-module-monorepo/output
 test/default-export-rename-on/output
 test/default-export-rename-off/output

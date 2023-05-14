@@ -40,4 +40,8 @@ echo =============================== TEST MERGE PROJECT ON MONOREPO ============
 call npx typedoc --tsconfig merge-project-monorepo/tsconfig.json --plugin typedoc-plugin-merge-modules --entryPointStrategy packages --out merge-project-monorepo/output merge-project-monorepo/input/project1 merge-project-monorepo/input/project2
 call npx cypress run --quiet --spec "merge-project-monorepo/test.cy.ts"
 
+echo =============================== TEST MERGE MODULE ON MONOREPO ======================================
+call npx typedoc --tsconfig merge-module-monorepo/tsconfig.json --plugin typedoc-plugin-merge-modules --mergeModulesMergeMode module --entryPointStrategy packages --out merge-module-monorepo/output merge-module-monorepo/input/project1 merge-module-monorepo/input/project2
+call npx cypress run --quiet --spec "merge-module-monorepo/test.cy.ts"
+
 echo ======================================== FINISHED ==================================================
