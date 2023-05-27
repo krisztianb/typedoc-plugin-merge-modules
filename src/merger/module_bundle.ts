@@ -51,6 +51,9 @@ export class ModuleBundle {
         childrenOfAllModules.forEach((child) => (child.parent = targetModule));
         targetModule.children = childrenOfAllModules;
 
+        this.mergeCategoriesIntoTargetModule(targetModule);
+        this.mergeGroupsIntoTargetModule(targetModule);
+
         // remove rest modules
         this.modules.forEach((module) => {
             if (module !== targetModule) {
@@ -84,5 +87,71 @@ export class ModuleBundle {
 
         // 3. default: pick the first module
         return this.modules[0];
+    }
+
+    /**
+     * Merges the children from all modules' categories into the corresponding category of the given target module.
+     * @param targetModule The target module into whoes categories the children should be merged.
+     */
+    private mergeCategoriesIntoTargetModule(targetModule: DeclarationReflection): void {
+        // merge categories
+        this.modules.forEach((module) => {
+            if (module !== targetModule) {
+                module.categories?.forEach((category) => {
+                    const existingTargetCategory = targetModule.categories?.find((c) => c.title === category.title);
+
+                    if (!existingTargetCategory) {
+                        targetModule.categories = [...(targetModule.categories ?? []), category];
+                    } else {
+                        existingTargetCategory.children = existingTargetCategory.children.concat(category.children);
+                    }
+                });
+            }
+        });
+
+        // sort categories
+        targetModule.categories?.forEach((category) => {
+            category.children.sort((a, b) => {
+                if (a.name > b.name) {
+                    return 1;
+                } else if (a.name === b.name) {
+                    return 0;
+                }
+                return -1;
+            });
+        });
+    }
+
+    /**
+     * Merges the children from all modules' groups into the corresponding group of the given target module.
+     * @param targetModule The target module into whoes groups the children should be merged.
+     */
+    private mergeGroupsIntoTargetModule(targetModule: DeclarationReflection): void {
+        // merge groups
+        this.modules.forEach((module) => {
+            if (module !== targetModule) {
+                module.groups?.forEach((group) => {
+                    const existingTargetGroup = targetModule.groups?.find((g) => g.title === group.title);
+
+                    if (!existingTargetGroup) {
+                        targetModule.groups = [...(targetModule.groups ?? []), group];
+                    } else {
+                        existingTargetGroup.children = existingTargetGroup.children.concat(group.children);
+                    }
+                });
+            }
+        });
+
+        // sort groups
+        targetModule.groups?.forEach((group) => {
+            group.children.sort((a, b) => {
+                if (a.name > b.name) {
+                    return 1;
+                } else if (a.name === b.name) {
+                    return 0;
+                }
+                return -1;
+            });
+        });
     }
 }
