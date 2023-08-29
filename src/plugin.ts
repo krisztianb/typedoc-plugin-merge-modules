@@ -88,7 +88,6 @@ export class Plugin {
                 ReflectionKind.ClassOrInterface |
                     ReflectionKind.Enum |
                     ReflectionKind.Function |
-                    ReflectionKind.ObjectLiteral |
                     ReflectionKind.TypeAlias |
                     ReflectionKind.TypeLiteral |
                     ReflectionKind.Variable,
