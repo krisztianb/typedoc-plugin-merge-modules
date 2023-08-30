@@ -27,7 +27,7 @@
         "typescript": "5.0.4"
     },
     "peerDependencies": {
-        "typedoc": "^0.24.x"
+        "typedoc": "^0.24.x || ^0.25.x"
     },
     "repository": {
         "type": "git",
