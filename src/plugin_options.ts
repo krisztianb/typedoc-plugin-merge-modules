@@ -8,11 +8,19 @@ type Mode = "project" | "module" | "module-category" | "off";
  */
 declare module "typedoc" {
     // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- This is not a separate type.
-    export interface TypeDocOptionMap {
-        mergeModulesRenameDefaults: boolean;
-        mergeModulesMergeMode: Mode;
-    }
+    export interface TypeDocOptionMap extends Required<PluginConfig> {}
 }
+
+/**
+ * A type for the options of the plugin.
+ */
+export type PluginConfig = {
+    /** Defines if the plugin should rename default exports to their original name. */
+    mergeModulesRenameDefaults?: boolean;
+
+    /** Defines how the plugin should merge modules. */
+    mergeModulesMergeMode?: Mode;
+};
 
 /**
  * Class storing the options of the plugin.

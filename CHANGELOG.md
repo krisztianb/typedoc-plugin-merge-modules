@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [5.1.0] - 2023-08-30
 ### Added
 -   Added support for latest TypeDoc version 0.25.x.
+-   The plugin now includes typings for its configuation that you can use in your TypeDoc config. (see README)
 
 ## [5.0.1] - 2023-05-27
 ### Fixed
