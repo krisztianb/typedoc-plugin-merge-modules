@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [5.1.0] - 2023-08-30
+### Added
+-   Added support for latest TypeDoc version 0.25.x.
+
 ## [5.0.1] - 2023-05-27
 ### Fixed
 -   Categories and groups are incomplete when merging modules in a monorepo project.
@@ -69,7 +73,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 First release
 
-[unreleased]: https://github.com/krisztianb/typedoc-plugin-merge-modules/compare/v5.0.1...HEAD
+[unreleased]: https://github.com/krisztianb/typedoc-plugin-merge-modules/compare/v5.1.0...HEAD
+[5.1.0]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v5.1.0
 [5.0.1]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v5.0.1
 [5.0.0]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v5.0.0
 [4.1.0]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v4.1.0
