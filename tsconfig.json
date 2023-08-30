@@ -1,13 +1,14 @@
 {
+    "include": ["src"],
     "compilerOptions": {
-        "module": "commonjs",
         "outDir": "dist",
+        "target": "es2015",
+        "module": "commonjs",
+        "declaration": true,
         "baseUrl": "./",
         "strict": true,
         "noImplicitOverride": true,
         "exactOptionalPropertyTypes": true,
-        "esModuleInterop": true,
-        "target": "es2015"
-    },
-    "include": ["src"]
+        "esModuleInterop": true
+    }
 }

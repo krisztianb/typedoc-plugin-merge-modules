@@ -1,5 +1,12 @@
 import { Application } from "typedoc";
 import { Plugin } from "./plugin";
+import { PluginConfig } from "./plugin_options";
+
+/**
+ * Type that can be intersected with TypeDoc's config type to have static type checking for the plugin's configuration.
+ * Check out the README.md for an example.
+ */
+export type Config = PluginConfig;
 
 /**
  * Initializes the plugin.

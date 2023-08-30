@@ -16,10 +16,25 @@ describe("index.html", () => {
     it("contains a merged module link for a and b", () => {
         cy.get("nav").find("a[href='modules/merged.html']");
     });
+});
 
-    it("contains sub links to the classes A, B and C", () => {
-        cy.get("nav").find("a[href='classes/merged.A.html']");
-        cy.get("nav").find("a[href='classes/merged.B.html']");
-        cy.get("nav").find("a[href='classes/c.C.html']");
+describe("modules/c.html", () => {
+    beforeEach(() => {
+        cy.visit("./merge-module/output/modules/c.html");
+    });
+
+    it("contains a sub link to the class C", () => {
+        cy.get("nav").find("a[href='../classes/c.C.html']");
+    });
+});
+
+describe("modules/merged.html", () => {
+    beforeEach(() => {
+        cy.visit("./merge-module/output/modules/merged.html");
+    });
+
+    it("contains sub links to the classes A and B", () => {
+        cy.get("nav").find("a[href='../classes/merged.A.html']");
+        cy.get("nav").find("a[href='../classes/merged.B.html']");
     });
 });

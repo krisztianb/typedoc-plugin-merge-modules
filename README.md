@@ -23,7 +23,23 @@ This module can be installed using [npm](https://www.npmjs.com/package/typedoc-p
 $ npm install typedoc-plugin-merge-modules --save-dev
 ```
 
-The plugin requires TypeDoc version 0.24.x to be installed. After installation you need to activate the plugin with a [typedoc command line argument](https://typedoc.org/options/configuration/#plugin) or inside your [typedoc config file](https://typedoc.org/options/configuration/#json-files).
+The plugin requires TypeDoc version 0.24.x or 0.25.x to be installed. After installation you need to activate the plugin with a [typedoc command line argument](https://typedoc.org/options/configuration/#plugin) or inside your [typedoc config file](https://typedoc.org/options/configuration/#json-files).
+
+Here is an example using a JavaScript config file:
+
+```js
+/** @type { import('typedoc').TypeDocOptionMap & import('typedoc-plugin-merge-modules').Config } */
+module.exports = {
+    out: "output",
+    entryPointStrategy: "expand",
+    entryPoints: ["input/module1.ts", "input/module2.ts"],
+    tsconfig: "tsconfig.json",
+    readme: "MAIN.md",
+    plugin: ["typedoc-plugin-merge-modules"],
+    mergeModulesRenameDefaults: true, // NEW option of TypeDoc added by this plugin
+    mergeModulesMergeMode: "project", // NEW option of TypeDoc added by this plugin
+};
+```
 
 After installation TypeDoc can be used normally and you can configure this plugin as described below.
 

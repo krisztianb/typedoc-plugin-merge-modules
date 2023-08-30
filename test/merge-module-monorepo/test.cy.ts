@@ -13,17 +13,17 @@ describe("index.html", () => {
     it("contains a module link for 'Project 1'", () => {
         cy.get("nav").find("a[href='modules/Project_1.html']");
     });
-
-    it("contains sub links to the classes A, B and C", () => {
-        cy.get("nav").find("a[href='classes/Project_1.A.html']");
-        cy.get("nav").find("a[href='classes/Project_1.B.html']");
-        cy.get("nav").find("a[href='classes/Project_1.C.html']");
-    });
 });
 
 describe("modules/Project_1.html", () => {
     beforeEach(() => {
         cy.visit("./merge-module-monorepo/output/modules/Project_1.html");
+    });
+
+    it("contains sub links to the classes A, B and C", () => {
+        cy.get("nav").find("a[href='../classes/Project_1.A.html']");
+        cy.get("nav").find("a[href='../classes/Project_1.B.html']");
+        cy.get("nav").find("a[href='../classes/Project_1.C.html']");
     });
 
     it("contains index links to the classes A, B and C", () => {
