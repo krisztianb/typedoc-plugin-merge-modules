@@ -47,7 +47,7 @@ export class Plugin {
      * @param typedoc The TypeDoc application.
      */
     private subscribeToApplicationEvents(typedoc: Readonly<Application>): void {
-        typedoc.on(Application.EVENT_BOOTSTRAP_END, (c: Readonly<Context>) => this.onApplicationBootstrapEnd(c));
+        typedoc.on(Application.EVENT_BOOTSTRAP_END, (a: Readonly<Application>) => this.onApplicationBootstrapEnd(a));
         typedoc.converter.on(Converter.EVENT_CREATE_DECLARATION, (c: Readonly<Context>, r: DeclarationReflection) =>
             this.onConverterCreateDeclaration(c, r),
         );
@@ -60,18 +60,20 @@ export class Plugin {
             typedoc.entryPointStrategy === EntryPointStrategy.Packages;
 
         if (typeDocUsesMultipleConverters) {
-            typedoc.on(Application.EVENT_PROJECT_REVIVE, (c: Readonly<Context>) => this.onConvertersDone(c));
+            typedoc.on(Application.EVENT_PROJECT_REVIVE, (p: ProjectReflection) => this.onConvertersDone(p));
         } else {
-            typedoc.converter.on(Converter.EVENT_RESOLVE_BEGIN, (c: Readonly<Context>) => this.onConvertersDone(c));
+            typedoc.converter.on(Converter.EVENT_RESOLVE_BEGIN, (c: Readonly<Context>) =>
+                this.onConvertersDone(c.project),
+            );
         }
     }
 
     /**
      * Triggered after plugins have been loaded and options have been read.
-     * @param context Describes the current state the converter is in.
+     * @param typedoc The TypeDoc application.
      */
-    public onApplicationBootstrapEnd(context: Readonly<Context>): void {
-        this.options.readValuesFromApplication(context.converter.owner);
+    public onApplicationBootstrapEnd(typedoc: Readonly<Application>): void {
+        this.options.readValuesFromApplication(typedoc);
     }
 
     /**
@@ -103,11 +105,11 @@ export class Plugin {
 
     /**
      * Triggered after all converters are done.
-     * @param context Describes the current state the converter is in.
+     * @param project The project on which the event is triggered.
      */
-    public onConvertersDone(context: Readonly<Context>): void {
+    public onConvertersDone(project: ProjectReflection): void {
         if (this.isEnabled) {
-            this.createMerger(context.project)?.execute();
+            this.createMerger(project)?.execute();
         }
     }
 
