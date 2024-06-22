@@ -5,9 +5,9 @@ describe("index.html", () => {
     });
 
     it("contains separate module links for a, b, and c", () => {
-        cy.get("nav").find("a[href='modules/a.html']");
-        cy.get("nav").find("a[href='modules/b.html']");
-        cy.get("nav").find("a[href='modules/c.html']");
+        cy.get("nav").find("a[href='./modules/a.html']");
+        cy.get("nav").find("a[href='./modules/b.html']");
+        cy.get("nav").find("a[href='./modules/c.html']");
     });
 });
 
