@@ -27,13 +27,10 @@ export function tryGetOriginalReflectionName(
             return symbol.name;
         } else if (symbol.declarations) {
             const declaration = symbol.declarations[0] as DeclarationWithIdentifier | undefined;
+            const declarationName = declaration?.name?.getText?.();
 
-            if (declaration && declaration.name && declaration.name.getText) {
-                const declarationName = declaration.name.getText();
-
-                if (typeof declarationName === "string") {
-                    return declarationName;
-                }
+            if (typeof declarationName === "string") {
+                return declarationName;
             }
         }
     }
