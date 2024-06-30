@@ -1,6 +1,6 @@
 {
     "name": "typedoc-plugin-merge-modules",
-    "version": "5.1.0",
+    "version": "6.0.0",
     "description": "Plugin for TypeDoc that merges the content of modules.",
     "author": {
         "name": "Krisztián Balla",
@@ -12,22 +12,22 @@
         "typedocplugin"
     ],
     "devDependencies": {
-        "@types/mocha": "10.0.1",
-        "@types/node": "18.16.20",
-        "@typescript-eslint/eslint-plugin": "6.5.0",
-        "@typescript-eslint/parser": "6.5.0",
+        "@types/mocha": "10.0.7",
+        "@types/node": "20.14.9",
+        "@typescript-eslint/eslint-plugin": "7.14.1",
+        "@typescript-eslint/parser": "7.14.1",
         "cypress": "12.13.0",
-        "eslint": "8.48.0",
-        "eslint-plugin-jsdoc": "46.5.1",
+        "eslint": "8.56.0",
+        "eslint-plugin-jsdoc": "48.5.0",
         "eslint-plugin-ordered-imports": "0.6.0",
-        "eslint-plugin-unicorn": "48.0.1",
-        "prettier": "3.0.3",
-        "rimraf": "5.0.1",
-        "typedoc": "0.25.0",
-        "typescript": "5.2.2"
+        "eslint-plugin-unicorn": "54.0.0",
+        "prettier": "3.3.2",
+        "rimraf": "5.0.7",
+        "typedoc": "0.26.3",
+        "typescript": "5.5.2"
     },
     "peerDependencies": {
-        "typedoc": "0.24.x || 0.25.x"
+        "typedoc": "0.26.x"
     },
     "repository": {
         "type": "git",
@@ -42,6 +42,6 @@
         "lint": "eslint ./src ./test",
         "format": "prettier --check ./src ./test",
         "build": "rimraf dist && tsc",
-        "test": "cd test && node test.js"
+        "test": "cd test && node prepare_test.js && node test.js"
     }
 }

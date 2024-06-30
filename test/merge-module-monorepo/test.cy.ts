@@ -5,13 +5,13 @@ describe("index.html", () => {
     });
 
     it("contains no module links for a, b and c", () => {
-        cy.get("nav").find("a[href='modules/a.html']").should("not.exist");
-        cy.get("nav").find("a[href='modules/b.html']").should("not.exist");
-        cy.get("nav").find("a[href='modules/c.html']").should("not.exist");
+        cy.get("nav").find("a[href='./modules/a.html']").should("not.exist");
+        cy.get("nav").find("a[href='./modules/b.html']").should("not.exist");
+        cy.get("nav").find("a[href='./modules/c.html']").should("not.exist");
     });
 
     it("contains a module link for 'Project 1'", () => {
-        cy.get("nav").find("a[href='modules/Project_1.html']");
+        cy.get("nav").find("a[href='./modules/Project_1.html']");
     });
 });
 
