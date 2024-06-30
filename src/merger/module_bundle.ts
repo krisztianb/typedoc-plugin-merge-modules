@@ -89,7 +89,8 @@ export class ModuleBundle {
 
     private mergeChildrenAndDocumentsIntoTargetModule(targetModule: DeclarationReflection): void {
         for (const mod of this.modules) {
-            const reflections = mod.childrenIncludingDocuments ?? [];
+            // Here we create a copy because the next loop modifies the collection
+            const reflections = [...(mod.childrenIncludingDocuments ?? [])];
 
             for (const ref of reflections) {
                 // Drop aliases (= ReflectionKind.Reference)
