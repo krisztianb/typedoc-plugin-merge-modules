@@ -1,4 +1,4 @@
-import { Context, DeclarationReflection } from "typedoc";
+import { Context, DeclarationReflection, DocumentReflection, ProjectReflection } from "typedoc";
 import * as ts from "typescript";
 
 /**
@@ -48,5 +48,79 @@ export function removeTagFromCommentsOf(reflection: DeclarationReflection, tagTo
 
     if (tagIndex !== -1) {
         reflection.comment?.blockTags.splice(tagIndex, 1);
+    }
+}
+
+/**
+ * Adds the given declaration reflection to the given target.
+ * @param ref The declaration reflection which should be added to the target.
+ * @param target The target to which to add the declaration reflection.
+ */
+export function addDeclarationReflectionToTarget(
+    ref: DeclarationReflection,
+    target: ProjectReflection | DeclarationReflection,
+): void {
+    ref.parent = target;
+    target.children?.push(ref);
+    target.childrenIncludingDocuments?.push(ref);
+}
+
+/**
+ * Removes the given declaration reflection from its module.
+ * @param ref The declaration reflection which should be removed from its module.
+ * @throws {Error} If the given reflection is not within a module.
+ */
+export function removeDeclarationReflectionFromModule(ref: DeclarationReflection): void {
+    const module = ref.parent;
+
+    if (!(module instanceof DeclarationReflection)) {
+        throw new Error("Trying to move a declaration reflection that is not part of a module");
+    }
+
+    const indexInChildren = module.children?.indexOf(ref) ?? -1;
+    if (indexInChildren !== -1) {
+        module.children?.splice(indexInChildren, 1);
+    }
+
+    const indexInChildrenIncludingDocuments = module.childrenIncludingDocuments?.indexOf(ref) ?? -1;
+    if (indexInChildrenIncludingDocuments !== -1) {
+        module.childrenIncludingDocuments?.splice(indexInChildrenIncludingDocuments, 1);
+    }
+}
+
+/**
+ * Adds the given document reflection to the given target.
+ * @param ref The document reflection which should be added to the target.
+ * @param target The target to which to add the document reflection.
+ */
+export function addDocumentReflectionToTarget(
+    ref: DocumentReflection,
+    target: ProjectReflection | DeclarationReflection,
+): void {
+    ref.parent = target;
+    target.documents?.push(ref);
+    target.childrenIncludingDocuments?.push(ref);
+}
+
+/**
+ * Removes the given document reflection from its module.
+ * @param ref The document reflection which should be removed from its module.
+ * @throws {Error} If the given reflection is not within a module.
+ */
+export function removeDocumentReflectionFromModule(ref: DocumentReflection): void {
+    const module = ref.parent;
+
+    if (!(module instanceof DeclarationReflection)) {
+        throw new Error("Trying to move a document reflection that is not part of a module");
+    }
+
+    const indexInDocuments = module.documents?.indexOf(ref) ?? -1;
+    if (indexInDocuments !== -1) {
+        module.documents?.splice(indexInDocuments, 1);
+    }
+
+    const indexInChildrenIncludingDocuments = module.childrenIncludingDocuments?.indexOf(ref) ?? -1;
+    if (indexInChildrenIncludingDocuments !== -1) {
+        module.childrenIncludingDocuments?.splice(indexInChildrenIncludingDocuments, 1);
     }
 }

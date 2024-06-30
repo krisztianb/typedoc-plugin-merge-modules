@@ -1,5 +1,11 @@
 /** @module merger */
 import { DeclarationReflection, DocumentReflection, ProjectReflection, ReflectionKind } from "typedoc";
+import {
+    addDeclarationReflectionToTarget,
+    addDocumentReflectionToTarget,
+    removeDeclarationReflectionFromModule,
+    removeDocumentReflectionFromModule,
+} from "../utils";
 
 /**
  * Merger that moves the content of all modules into the project root.
@@ -31,9 +37,9 @@ export class ProjectMerger {
                 for (const ref of reflections) {
                     // Drop aliases (= ReflectionKind.Reference)
                     if (ref instanceof DeclarationReflection && !ref.kindOf(ReflectionKind.Reference)) {
-                        this.moveDeclarationReflectionFromModuleToProject(ref, mod);
+                        this.moveDeclarationReflectionToProject(ref);
                     } else if (ref instanceof DocumentReflection) {
-                        this.moveDocumentReflectionFromModuleToProject(ref, mod);
+                        this.moveDocumentReflectionFromToProject(ref);
                     }
                 }
             }
@@ -51,51 +57,21 @@ export class ProjectMerger {
     }
 
     /**
-     * Moves a declaration reflection from a module to the project root.
+     * Moves a declaration reflection to the project root.
      * @param ref The declaration reflection that should be moved.
-     * @param module The module into which to move the declaration reflection.
      */
-    private moveDeclarationReflectionFromModuleToProject(
-        ref: DeclarationReflection,
-        module: DeclarationReflection,
-    ): void {
-        // add to project
-        ref.parent = this.project;
-        this.project.children?.push(ref);
-        this.project.childrenIncludingDocuments?.push(ref);
-
-        // remove from module
-        const indexInChildren = module.children?.indexOf(ref) ?? -1;
-        if (indexInChildren !== -1) {
-            module.children?.splice(indexInChildren, 1);
-        }
-
-        const indexInChildrenIncludingDocuments = module.childrenIncludingDocuments?.indexOf(ref) ?? -1;
-        if (indexInChildrenIncludingDocuments !== -1) {
-            module.childrenIncludingDocuments?.splice(indexInChildrenIncludingDocuments, 1);
-        }
+    private moveDeclarationReflectionToProject(ref: DeclarationReflection): void {
+        removeDeclarationReflectionFromModule(ref);
+        addDeclarationReflectionToTarget(ref, this.project);
     }
 
     /**
-     * Moves a document reflection from a module to the project root.
+     * Moves a document reflection to the project root.
      * @param ref The document reflection that should be moved.
-     * @param module The module into which to move the document reflection.
+     * @throws {Error} If the given reflection is not within a module.
      */
-    private moveDocumentReflectionFromModuleToProject(ref: DocumentReflection, module: DeclarationReflection): void {
-        // add to project
-        ref.parent = this.project;
-        this.project.documents?.push(ref);
-        this.project.childrenIncludingDocuments?.push(ref);
-
-        // remove from module
-        const indexInDocuments = module.documents?.indexOf(ref) ?? -1;
-        if (indexInDocuments !== -1) {
-            module.documents?.splice(indexInDocuments, 1);
-        }
-
-        const indexInChildrenIncludingDocuments = module.childrenIncludingDocuments?.indexOf(ref) ?? -1;
-        if (indexInChildrenIncludingDocuments !== -1) {
-            module.childrenIncludingDocuments?.splice(indexInChildrenIncludingDocuments, 1);
-        }
+    private moveDocumentReflectionFromToProject(ref: DocumentReflection): void {
+        removeDocumentReflectionFromModule(ref);
+        addDocumentReflectionToTarget(ref, this.project);
     }
 }

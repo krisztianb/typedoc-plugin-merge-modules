@@ -1,6 +1,12 @@
 /** @module merger */
-import { DeclarationReflection, ProjectReflection } from "typedoc";
-import { removeTagFromCommentsOf } from "../utils";
+import { DeclarationReflection, DocumentReflection, ProjectReflection, ReflectionKind } from "typedoc";
+import {
+    addDeclarationReflectionToTarget,
+    addDocumentReflectionToTarget,
+    removeDeclarationReflectionFromModule,
+    removeDocumentReflectionFromModule,
+    removeTagFromCommentsOf,
+} from "../utils";
 
 /**
  * Name of the comment tag that can be used to mark a module as the target module within the bundle.
@@ -38,19 +44,11 @@ export class ModuleBundle {
      * Merges the modules of the bundle into one module.
      */
     public merge(): void {
-        const childrenOfAllModules = this.modules
-            .map((m) => m.children)
-            .filter((m): m is DeclarationReflection[] => m !== undefined)
-            .reduce((acc, val) => acc.concat(val), []);
-
         // get target module
         const targetModule = this.getTargetModule();
         removeTagFromCommentsOf(targetModule, targetModuleCommentTag);
 
-        // set target module for all children
-        childrenOfAllModules.forEach((child) => (child.parent = targetModule));
-        targetModule.children = childrenOfAllModules;
-
+        this.mergeChildrenAndDocumentsIntoTargetModule(targetModule);
         this.mergeCategoriesIntoTargetModule(targetModule);
         this.mergeGroupsIntoTargetModule(targetModule);
 
@@ -87,6 +85,47 @@ export class ModuleBundle {
 
         // 3. default: pick the first module
         return this.modules[0];
+    }
+
+    private mergeChildrenAndDocumentsIntoTargetModule(targetModule: DeclarationReflection): void {
+        for (const mod of this.modules) {
+            const reflections = mod.childrenIncludingDocuments ?? [];
+
+            for (const ref of reflections) {
+                // Drop aliases (= ReflectionKind.Reference)
+                if (ref instanceof DeclarationReflection && !ref.kindOf(ReflectionKind.Reference)) {
+                    this.moveDeclarationReflectionToTargetModule(ref, targetModule);
+                } else if (ref instanceof DocumentReflection) {
+                    this.moveDocumentReflectionToTargetModule(ref, targetModule);
+                }
+            }
+        }
+    }
+
+    /**
+     * Moves a declaration reflection to the given target module.
+     * @param ref The declaration reflection that should be moved.
+     * @param targetModule The target module into which the declaration reflection should be moved.
+     */
+    // eslint-disable-next-line class-methods-use-this
+    private moveDeclarationReflectionToTargetModule(
+        ref: DeclarationReflection,
+        targetModule: DeclarationReflection,
+    ): void {
+        removeDeclarationReflectionFromModule(ref);
+        addDeclarationReflectionToTarget(ref, targetModule);
+    }
+
+    /**
+     * Moves a document reflection to the given target module.
+     * @param ref The document reflection that should be moved.
+     * @param targetModule The target module into which the document reflection should be moved.
+     * @throws {Error} If the given reflection is not within a module.
+     */
+    // eslint-disable-next-line class-methods-use-this
+    private moveDocumentReflectionToTargetModule(ref: DocumentReflection, targetModule: DeclarationReflection): void {
+        removeDocumentReflectionFromModule(ref);
+        addDocumentReflectionToTarget(ref, targetModule);
     }
 
     /**
