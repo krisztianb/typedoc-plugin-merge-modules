@@ -10,9 +10,19 @@ if (!fs.existsSync("..\\dist")) {
 
 console.log("Copying current build of plugin to node_modules for testing...");
 
-fs.rm("..\\node_modules\\typedoc-plugin-merge-modules", { recursive: true, force: true }, () => {});
-fs.mkdirSync("..\\node_modules\\typedoc-plugin-merge-modules\\dist", { recursive: true });
-fs.copyFileSync("..\\package.json", "..\\node_modules\\typedoc-plugin-merge-modules\\package.json");
-fs.cpSync("..\\dist", "..\\node_modules\\typedoc-plugin-merge-modules\\dist", { recursive: true });
+fs.rm("..\\node_modules\\typedoc-plugin-merge-modules", { recursive: true, force: true }, (rmErr) => {
+    if (rmErr) {
+        throw rmErr;
+    } else {
+        fs.mkdir("..\\node_modules\\typedoc-plugin-merge-modules\\dist", { recursive: true }, (mkDirErr) => {
+            if (mkDirErr) {
+                throw mkDirErr;
+            } else {
+                fs.copyFileSync("..\\package.json", "..\\node_modules\\typedoc-plugin-merge-modules\\package.json");
+                fs.cpSync("..\\dist", "..\\node_modules\\typedoc-plugin-merge-modules\\dist", { recursive: true });
+            }
+        });
+    }
+});
 
 console.log("DONE\n");
