@@ -23,7 +23,7 @@ This module can be installed using [npm](https://www.npmjs.com/package/typedoc-p
 $ npm install typedoc-plugin-merge-modules --save-dev
 ```
 
-The plugin requires TypeDoc version 0.24.x or 0.25.x to be installed. After installation you need to activate the plugin with a [typedoc command line argument](https://typedoc.org/options/configuration/#plugin) or inside your [typedoc config file](https://typedoc.org/options/configuration/#json-files).
+The plugin requires TypeDoc version 0.26.x to be installed. After installation you need to activate the plugin with a [typedoc command line argument](https://typedoc.org/options/configuration/#plugin) or inside your [typedoc config file](https://typedoc.org/options/configuration/#json-files).
 
 Here is an example using a JavaScript config file:
 

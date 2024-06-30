@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [6.0.0] - 2024-06-XX
+## [6.0.0] - 2024-06-30
 ### BREAKING CHANGES
 -   Support changed to TypeDoc version 0.26.x due to a breaking change in TypeDoc's API.
 
