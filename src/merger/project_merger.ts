@@ -3,6 +3,7 @@ import { DeclarationReflection, DocumentReflection, ProjectReflection, Reflectio
 import {
     addDeclarationReflectionToTarget,
     addDocumentReflectionToTarget,
+    getModules as getModulesFrom,
     removeDeclarationReflectionFromModule,
     removeDocumentReflectionFromModule,
 } from "../utils";
@@ -26,18 +27,22 @@ export class ProjectMerger {
      * Performs the merging routine.
      */
     public execute(): void {
-        const modules = (this.project.children ?? []).filter((c) => c.kindOf(ReflectionKind.Module));
+        // In monorepo project each project is also a module => Recursively collect all modules
+        const allModules = getModulesFrom(this.project);
 
-        if (modules.length > 0) {
+        if (allModules.length > 0) {
             this.clearProject();
 
-            for (const mod of modules) {
+            for (const module of allModules) {
                 // Here we create a copy because the next loop modifies the collection
-                const reflections = [...(mod.childrenIncludingDocuments ?? [])];
+                const reflections = [...(module.childrenIncludingDocuments ?? [])];
 
                 for (const ref of reflections) {
-                    // Drop aliases (= ReflectionKind.Reference)
-                    if (ref instanceof DeclarationReflection && !ref.kindOf(ReflectionKind.Reference)) {
+                    // Drop aliases (= ReflectionKind.Reference) and modules
+                    if (
+                        ref instanceof DeclarationReflection &&
+                        !ref.kindOf([ReflectionKind.Reference, ReflectionKind.Module])
+                    ) {
                         this.moveDeclarationReflectionToProject(ref);
                     } else if (ref instanceof DocumentReflection) {
                         this.moveDocumentReflectionFromToProject(ref);
