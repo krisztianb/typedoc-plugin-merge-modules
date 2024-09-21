@@ -13,6 +13,10 @@ describe("index.html", () => {
         cy.get("nav").find("a[href='./modules/merged-1.html']"); // for C
         cy.get("nav").find("a[href='./modules/merged-2.html']"); // for D
     });
+
+    it("contains a link to the project documentation", () => {
+        cy.get("nav").find("a[href='./documents/doc1.html']");
+    });
 });
 
 describe("modules/e.html", () => {

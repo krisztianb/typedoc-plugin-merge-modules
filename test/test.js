@@ -20,7 +20,7 @@ execSync("npx cypress run --quiet --spec 'merge-module/test.cy.ts'", execOptions
 
 console.log("================================ TEST MERGE MODULE CATEGORY ========================================");
 // prettier-ignore
-execSync("npx typedoc --tsconfig merge-module-category/tsconfig.json --plugin typedoc-plugin-merge-modules --mergeModulesMergeMode module-category --entryPointStrategy expand --out merge-module-category/output merge-module-category/input", execOptions);
+execSync("cd merge-module-category && npx typedoc", execOptions);
 execSync("npx cypress run --quiet --spec 'merge-module-category/test.cy.ts'", execOptions);
 
 console.log("============================== TEST DEFAULT EXPORT RENAMING ON =====================================");
