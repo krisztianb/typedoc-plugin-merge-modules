@@ -9,7 +9,7 @@ execSync("call npx cypress run --quiet --spec 'merge-off/test.cy.ts'", { stdio: 
 
 console.log("=================================== TEST MERGE PROJECT =============================================");
 // prettier-ignore
-execSync("npx typedoc --tsconfig merge-project/tsconfig.json --plugin typedoc-plugin-merge-modules --mergeModulesMergeMode project --entryPointStrategy expand --out merge-project/output merge-project/input", { stdio: "inherit" });
+execSync("cd merge-project && npx typedoc", { stdio: "inherit" });
 execSync("npx cypress run --quiet --spec 'merge-project/test.cy.ts'", { stdio: "inherit" });
 
 console.log("==================================== TEST MERGE MODULE =============================================");

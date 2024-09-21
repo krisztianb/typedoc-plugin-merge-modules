@@ -52,9 +52,11 @@ export class ProjectMerger {
      */
     private clearProject(): void {
         this.project.children = [];
-        this.project.documents = [];
-        this.project.childrenIncludingDocuments = [];
         this.project.children.forEach((child) => this.project.removeReflection(child));
+
+        // keep project documents that are included with the TypeDoc config parameter "projectDocuments"
+        this.project.childrenIncludingDocuments =
+            this.project.childrenIncludingDocuments?.filter((item) => item instanceof DocumentReflection) ?? [];
     }
 
     /**
