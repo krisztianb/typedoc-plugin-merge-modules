@@ -15,4 +15,9 @@ describe("index.html", () => {
         cy.get("nav").find("a[href='./classes/B.html']");
         cy.get("nav").find("a[href='./classes/C.html']");
     });
+
+    it("contains links to the project documentations", () => {
+        cy.get("nav").find("a[href='./documents/doc1.html']");
+        cy.get("nav").find("a[href='./documents/doc2.html']");
+    });
 });
