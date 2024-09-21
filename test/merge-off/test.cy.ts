@@ -9,6 +9,10 @@ describe("index.html", () => {
         cy.get("nav").find("a[href='./modules/b.html']");
         cy.get("nav").find("a[href='./modules/c.html']");
     });
+
+    it("contains a link to the project documentation", () => {
+        cy.get("nav").find("a[href='./documents/doc1.html']");
+    });
 });
 
 describe("modules/a.html", () => {

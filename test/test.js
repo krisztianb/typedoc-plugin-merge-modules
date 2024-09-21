@@ -4,7 +4,7 @@ const { execSync } = require("child_process");
 
 console.log("===================================== TEST MERGE OFF ===============================================");
 // prettier-ignore
-execSync("npx typedoc --tsconfig merge-off/tsconfig.json --plugin typedoc-plugin-merge-modules --mergeModulesMergeMode off --entryPointStrategy expand --out merge-off/output merge-off/input", { stdio: "inherit" });
+execSync("cd merge-off && npx typedoc", { stdio: "inherit" });
 execSync("call npx cypress run --quiet --spec 'merge-off/test.cy.ts'", { stdio: "inherit" });
 
 console.log("=================================== TEST MERGE PROJECT =============================================");

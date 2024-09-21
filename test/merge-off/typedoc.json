@@ -1,0 +1,10 @@
+{
+    "$schema": "https://typedoc.org/schema.json",
+    "name": "Project Merge-Off",
+    "entryPoints": ["input/*.ts"],
+    "entryPointStrategy": "expand",
+    "projectDocuments": ["input/project-documents/*.md"],
+    "out": "output",
+    "plugin": ["typedoc-plugin-merge-modules"],
+    "mergeModulesMergeMode": "off"
+}
