@@ -1,5 +1,5 @@
-/** @module merger */
-import { DeclarationReflection, ProjectReflection, ReflectionKind } from "typedoc";
+import { DeclarationReflection, ProjectReflection } from "typedoc";
+import { getModulesFrom } from "../utils";
 import { ModuleBundle } from "./module_bundle";
 
 /**
@@ -40,7 +40,7 @@ export class ModuleMerger {
      * @returns The collection of module bundles.
      */
     protected createModuleBundles(): ModuleBundle[] {
-        const modules = (this.project.children ?? []).filter((c) => c.kindOf(ReflectionKind.Module));
+        const modules = getModulesFrom(this.project);
         const moduleBundleMap = new Map<string, ModuleBundle>();
 
         for (const module of modules) {

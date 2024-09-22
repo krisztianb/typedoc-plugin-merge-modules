@@ -1,8 +1,8 @@
-/** @module merger */
 import { DeclarationReflection, DocumentReflection, ProjectReflection, ReflectionKind } from "typedoc";
 import {
     addDeclarationReflectionToTarget,
     addDocumentReflectionToTarget,
+    getModulesFrom,
     removeDeclarationReflectionFromModule,
     removeDocumentReflectionFromModule,
 } from "../utils";
@@ -26,18 +26,22 @@ export class ProjectMerger {
      * Performs the merging routine.
      */
     public execute(): void {
-        const modules = (this.project.children ?? []).filter((c) => c.kindOf(ReflectionKind.Module));
+        // In monorepo project each project is also a module => Recursively collect all modules
+        const allModules = getModulesFrom(this.project);
 
-        if (modules.length > 0) {
-            this.clearProject();
+        if (allModules.length > 0) {
+            this.removeModulesFromProject();
 
-            for (const mod of modules) {
+            for (const module of allModules) {
                 // Here we create a copy because the next loop modifies the collection
-                const reflections = [...(mod.childrenIncludingDocuments ?? [])];
+                const reflections = [...(module.childrenIncludingDocuments ?? [])];
 
                 for (const ref of reflections) {
-                    // Drop aliases (= ReflectionKind.Reference)
-                    if (ref instanceof DeclarationReflection && !ref.kindOf(ReflectionKind.Reference)) {
+                    // Drop aliases (= ReflectionKind.Reference) and modules
+                    if (
+                        ref instanceof DeclarationReflection &&
+                        !ref.kindOf([ReflectionKind.Reference, ReflectionKind.Module])
+                    ) {
                         this.moveDeclarationReflectionToProject(ref);
                     } else if (ref instanceof DocumentReflection) {
                         this.moveDocumentReflectionFromToProject(ref);
@@ -48,13 +52,15 @@ export class ProjectMerger {
     }
 
     /**
-     * Removes all children and documents from the project reflection.
+     * Removes all modules from the project reflection. Doesn't touch the project documents.
      */
-    private clearProject(): void {
+    private removeModulesFromProject(): void {
         this.project.children = [];
-        this.project.documents = [];
-        this.project.childrenIncludingDocuments = [];
         this.project.children.forEach((child) => this.project.removeReflection(child));
+
+        // keep project documents that are included with the TypeDoc config parameter "projectDocuments"
+        this.project.childrenIncludingDocuments =
+            this.project.childrenIncludingDocuments?.filter((item) => item instanceof DocumentReflection) ?? [];
     }
 
     /**

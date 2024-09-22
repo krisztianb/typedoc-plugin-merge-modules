@@ -1,4 +1,4 @@
-import { Context, DeclarationReflection, DocumentReflection, ProjectReflection } from "typedoc";
+import { Context, DeclarationReflection, DocumentReflection, ProjectReflection, ReflectionKind } from "typedoc";
 import * as ts from "typescript";
 
 /**
@@ -123,4 +123,20 @@ export function removeDocumentReflectionFromModule(ref: DocumentReflection): voi
     if (indexInChildrenIncludingDocuments !== -1) {
         module.childrenIncludingDocuments?.splice(indexInChildrenIncludingDocuments, 1);
     }
+}
+
+/**
+ * Returns the modules within the given module parent. Searches recursively.
+ * @param moduleParent The element in which to search for modules.
+ * @returns The modules within the given module parent.
+ */
+export function getModulesFrom(moduleParent: ProjectReflection | DeclarationReflection): DeclarationReflection[] {
+    const modules = (moduleParent.children ?? []).filter((c) => c.kindOf(ReflectionKind.Module));
+
+    for (const mod of modules) {
+        const subModules = getModulesFrom(mod);
+        modules.push(...subModules);
+    }
+
+    return modules;
 }

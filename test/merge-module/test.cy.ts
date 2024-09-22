@@ -16,6 +16,10 @@ describe("index.html", () => {
     it("contains a merged module link for a and b", () => {
         cy.get("nav").find("a[href='./modules/merged.html']");
     });
+
+    it("contains a link to the project documentation", () => {
+        cy.get("nav").find("a[href='./documents/doc1.html']");
+    });
 });
 
 describe("modules/c.html", () => {

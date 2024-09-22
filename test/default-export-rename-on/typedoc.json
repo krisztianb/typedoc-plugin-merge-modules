@@ -1,0 +1,9 @@
+{
+    "$schema": "https://typedoc.org/schema.json",
+    "name": "Project Default-Export-Rename-On",
+    "entryPoints": ["input/*.ts"],
+    "entryPointStrategy": "expand",
+    "out": "output",
+    "plugin": ["typedoc-plugin-merge-modules"],
+    "mergeModulesRenameDefaults": true
+}
