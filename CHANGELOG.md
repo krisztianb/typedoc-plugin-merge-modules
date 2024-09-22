@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [6.0.1] - 2024-09-22
+### Fixed
+-   Project documentations (introduced in TypeDoc 0.26) were incorrectly handled and removed by the plugin.
+-   Merging only happened at the root level and didn't take into account that TypeDoc creates parent modules for projects within monorepos.
+
 ## [6.0.0] - 2024-06-30
 ### BREAKING CHANGES
 -   Support changed to TypeDoc version 0.26.x due to a breaking change in TypeDoc's API.
@@ -78,7 +83,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 First release
 
-[unreleased]: https://github.com/krisztianb/typedoc-plugin-merge-modules/compare/v6.0.0...HEAD
+[unreleased]: https://github.com/krisztianb/typedoc-plugin-merge-modules/compare/v6.0.1...HEAD
+[6.0.1]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v6.0.1
 [6.0.0]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v6.0.0
 [5.1.0]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v5.1.0
 [5.0.1]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v5.0.1
