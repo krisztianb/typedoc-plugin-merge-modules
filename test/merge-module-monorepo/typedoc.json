@@ -1,0 +1,9 @@
+{
+    "$schema": "https://typedoc.org/schema.json",
+    "name": "Project Merge-Module-Monorepo",
+    "entryPoints": ["input/project1", "input/project2"],
+    "entryPointStrategy": "packages",
+    "out": "output",
+    "plugin": ["typedoc-plugin-merge-modules"],
+    "mergeModulesMergeMode": "module"
+}

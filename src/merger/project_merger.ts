@@ -1,9 +1,8 @@
-/** @module merger */
 import { DeclarationReflection, DocumentReflection, ProjectReflection, ReflectionKind } from "typedoc";
 import {
     addDeclarationReflectionToTarget,
     addDocumentReflectionToTarget,
-    getModules as getModulesFrom,
+    getModulesFrom,
     removeDeclarationReflectionFromModule,
     removeDocumentReflectionFromModule,
 } from "../utils";
@@ -31,7 +30,7 @@ export class ProjectMerger {
         const allModules = getModulesFrom(this.project);
 
         if (allModules.length > 0) {
-            this.clearProject();
+            this.removeModulesFromProject();
 
             for (const module of allModules) {
                 // Here we create a copy because the next loop modifies the collection
@@ -53,9 +52,9 @@ export class ProjectMerger {
     }
 
     /**
-     * Removes all children and documents from the project reflection.
+     * Removes all modules from the project reflection. Doesn't touch the project documents.
      */
-    private clearProject(): void {
+    private removeModulesFromProject(): void {
         this.project.children = [];
         this.project.children.forEach((child) => this.project.removeReflection(child));
 

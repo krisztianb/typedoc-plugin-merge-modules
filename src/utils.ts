@@ -130,11 +130,11 @@ export function removeDocumentReflectionFromModule(ref: DocumentReflection): voi
  * @param moduleParent The element in which to search for modules.
  * @returns The modules within the given module parent.
  */
-export function getModules(moduleParent: ProjectReflection | DeclarationReflection): DeclarationReflection[] {
+export function getModulesFrom(moduleParent: ProjectReflection | DeclarationReflection): DeclarationReflection[] {
     const modules = (moduleParent.children ?? []).filter((c) => c.kindOf(ReflectionKind.Module));
 
     for (const mod of modules) {
-        const subModules = getModules(mod);
+        const subModules = getModulesFrom(mod);
         modules.push(...subModules);
     }
 
