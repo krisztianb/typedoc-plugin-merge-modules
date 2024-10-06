@@ -89,12 +89,18 @@ export class ModuleBundle {
 
     private mergeChildrenAndDocumentsIntoTargetModule(targetModule: DeclarationReflection): void {
         for (const mod of this.modules) {
+            console.log("=================================== MODULE =====================================");
+            console.log(mod.categories);
+
             // Here we create a copy because the next loop modifies the collection
             const reflections = [...(mod.childrenIncludingDocuments ?? [])];
 
             for (const ref of reflections) {
                 // Drop aliases (= ReflectionKind.Reference)
                 if (ref instanceof DeclarationReflection && !ref.kindOf(ReflectionKind.Reference)) {
+                    console.log("=================================== REFLECTION =====================================");
+                    console.log(ref.categories);
+
                     this.moveDeclarationReflectionToTargetModule(ref, targetModule);
                 } else if (ref instanceof DocumentReflection) {
                     this.moveDocumentReflectionToTargetModule(ref, targetModule);
