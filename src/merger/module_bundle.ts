@@ -89,18 +89,12 @@ export class ModuleBundle {
 
     private mergeChildrenAndDocumentsIntoTargetModule(targetModule: DeclarationReflection): void {
         for (const mod of this.modules) {
-            console.log("=================================== MODULE =====================================");
-
             // Here we create a copy because the next loop modifies the collection
             const reflections = [...(mod.childrenIncludingDocuments ?? [])];
 
             for (const ref of reflections) {
                 // Drop aliases (= ReflectionKind.Reference)
                 if (ref instanceof DeclarationReflection && !ref.kindOf(ReflectionKind.Reference)) {
-                    console.log("=================================== REFLECTION =====================================");
-                    console.log("CATEGORIES", ref.categories);
-                    console.log("GROUPS", ref.groups);
-
                     this.moveDeclarationReflectionToTargetModule(ref, targetModule);
                 } else if (ref instanceof DocumentReflection) {
                     this.moveDocumentReflectionToTargetModule(ref, targetModule);
@@ -136,68 +130,42 @@ export class ModuleBundle {
     }
 
     /**
-     * Merges the children from all modules' categories into the corresponding category of the given target module.
-     * @param targetModule The target module into whoes categories the children should be merged.
+     * Merges the category description comment tags into the the given target module.
+     * This must be done because categorization is done by TypeDoc based on these comments after the plugin is done.
+     * @param targetModule The target module into which the category descriptions are merged.
      */
     private mergeCategoriesIntoTargetModule(targetModule: DeclarationReflection): void {
         // merge categories
         this.modules.forEach((module) => {
             if (module !== targetModule) {
-                module.categories?.forEach((category) => {
-                    const existingTargetCategory = targetModule.categories?.find((c) => c.title === category.title);
+                const categoryDescriptions =
+                    module.comment?.blockTags.filter((bt) => bt.tag === "@categoryDescription") ?? [];
 
-                    if (!existingTargetCategory) {
-                        targetModule.categories = [...(targetModule.categories ?? []), category];
-                    } else {
-                        existingTargetCategory.children = existingTargetCategory.children.concat(category.children);
-                    }
-                });
+                // TODO: targetModule might not have comment property into which to push new ones
+                // TODO: targetModule might already have a @categoryDescription with the same name
+
+                targetModule.comment?.blockTags.push(...categoryDescriptions);
             }
-        });
-
-        // sort categories
-        targetModule.categories?.forEach((category) => {
-            category.children.sort((a, b) => {
-                if (a.name > b.name) {
-                    return 1;
-                } else if (a.name === b.name) {
-                    return 0;
-                }
-                return -1;
-            });
         });
     }
 
     /**
-     * Merges the children from all modules' groups into the corresponding group of the given target module.
-     * @param targetModule The target module into whoes groups the children should be merged.
+     * Merges the group description comment tags into the the given target module.
+     * This must be done because groupization is done by TypeDoc based on these comments after the plugin is done.
+     * @param targetModule The target module into which the group descriptions are merged.
      */
     private mergeGroupsIntoTargetModule(targetModule: DeclarationReflection): void {
         // merge groups
         this.modules.forEach((module) => {
             if (module !== targetModule) {
-                module.groups?.forEach((group) => {
-                    const existingTargetGroup = targetModule.groups?.find((g) => g.title === group.title);
+                const groupDescriptions =
+                    module.comment?.blockTags.filter((bt) => bt.tag === "@groupDescription") ?? [];
 
-                    if (!existingTargetGroup) {
-                        targetModule.groups = [...(targetModule.groups ?? []), group];
-                    } else {
-                        existingTargetGroup.children = existingTargetGroup.children.concat(group.children);
-                    }
-                });
+                // TODO: targetModule might not have comment property into which to push new ones
+                // TODO: targetModule might already have a @groupDescription with the same name
+
+                targetModule.comment?.blockTags.push(...groupDescriptions);
             }
-        });
-
-        // sort groups
-        targetModule.groups?.forEach((group) => {
-            group.children.sort((a, b) => {
-                if (a.name > b.name) {
-                    return 1;
-                } else if (a.name === b.name) {
-                    return 0;
-                }
-                return -1;
-            });
         });
     }
 }
