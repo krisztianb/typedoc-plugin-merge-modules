@@ -10,7 +10,7 @@ describe("index.html", () => {
     });
 
     it("contains a separate module link for c", () => {
-        cy.get("nav").find("a[href='./modules/c.html']");
+        cy.get("nav").find("a[href='./modules/notMerged.html']");
     });
 
     it("contains a merged module link for a and b", () => {
@@ -22,13 +22,18 @@ describe("index.html", () => {
     });
 });
 
-describe("modules/c.html", () => {
+describe("modules/notMerged.html", () => {
     beforeEach(() => {
-        cy.visit("./merge-module/output/modules/c.html");
+        cy.visit("./merge-module/output/modules/notMerged.html");
     });
 
     it("contains a sub link to the class C", () => {
-        cy.get("nav").find("a[href='../classes/c.C.html']");
+        cy.get("nav").find("a[href='../classes/notMerged.C.html']");
+    });
+
+    it("contains the category Gamma and its description", () => {
+        cy.get(".col-content .tsd-index-section h3").should("have.text", "Gamma");
+        cy.get(".col-content .tsd-index-section p").should("have.text", "Category description from the file of C.");
     });
 });
 
@@ -40,5 +45,19 @@ describe("modules/merged.html", () => {
     it("contains sub links to the classes A and B", () => {
         cy.get("nav").find("a[href='../classes/merged.A.html']");
         cy.get("nav").find("a[href='../classes/merged.B.html']");
+    });
+
+    it("contains the category Alpha and its description", () => {
+        const sectionSelector = ".col-content .tsd-index-section:nth-of-type(1)";
+
+        cy.get(sectionSelector + " h3").should("have.text", "Alpha");
+        cy.get(sectionSelector + " p").should("have.text", "Category description from the file of A.");
+    });
+
+    it("contains the category Beta and its description", () => {
+        const sectionSelector = ".col-content .tsd-index-section:nth-of-type(2)";
+
+        cy.get(sectionSelector + " h3").should("have.text", "Beta");
+        cy.get(sectionSelector + " p").should("have.text", "Category description from the file of B.");
     });
 });

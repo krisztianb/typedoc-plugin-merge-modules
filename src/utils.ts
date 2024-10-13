@@ -1,4 +1,11 @@
-import { Context, DeclarationReflection, DocumentReflection, ProjectReflection, ReflectionKind } from "typedoc";
+import {
+    CommentTag,
+    Context,
+    DeclarationReflection,
+    DocumentReflection,
+    ProjectReflection,
+    ReflectionKind,
+} from "typedoc";
 import * as ts from "typescript";
 
 /**
@@ -139,4 +146,22 @@ export function getModulesFrom(moduleParent: ProjectReflection | DeclarationRefl
     }
 
     return modules;
+}
+
+/**
+ * Returns the first line of the given string.
+ * @param text The string from which to read the first line.
+ * @returns The first line of the given string.
+ */
+function getFirstLineOf(text: string): string {
+    return text.split("\n", 1)[0];
+}
+
+/**
+ * Returns the name of the given description tag.
+ * @param tag The description tag.
+ * @returns The name of the given description tag.
+ */
+export function getNameFromDescriptionTag(tag: CommentTag): string {
+    return getFirstLineOf(tag.content[0]?.text ?? "");
 }

@@ -3,6 +3,7 @@ import { Comment, DeclarationReflection, DocumentReflection, ProjectReflection, 
 import {
     addDeclarationReflectionToTarget,
     addDocumentReflectionToTarget,
+    getNameFromDescriptionTag,
     removeDeclarationReflectionFromModule,
     removeDocumentReflectionFromModule,
     removeTagFromCommentsOf,
@@ -198,7 +199,9 @@ export class ModuleBundle {
 
                 categoryDescriptionsOfModule.forEach((categoryDescription) => {
                     const targetModuleAlreadyHasThisCategoryDescriptionsTag = targetModule.comment?.blockTags.find(
-                        (bt) => bt.tag === "@categoryDescription" && bt.name === categoryDescription.name,
+                        (bt) =>
+                            bt.tag === "@categoryDescription" &&
+                            getNameFromDescriptionTag(bt) === getNameFromDescriptionTag(categoryDescription),
                     );
 
                     if (!targetModuleAlreadyHasThisCategoryDescriptionsTag) {
@@ -266,7 +269,9 @@ export class ModuleBundle {
 
                 groupDescriptionsOfModule.forEach((groupDescription) => {
                     const targetModuleAlreadyHasThisGroupDescriptionsTag = targetModule.comment?.blockTags.find(
-                        (bt) => bt.tag === "@groupDescription" && bt.name === groupDescription.name,
+                        (bt) =>
+                            bt.tag === "@groupDescription" &&
+                            getNameFromDescriptionTag(bt) === getNameFromDescriptionTag(groupDescription),
                     );
 
                     if (!targetModuleAlreadyHasThisGroupDescriptionsTag) {
