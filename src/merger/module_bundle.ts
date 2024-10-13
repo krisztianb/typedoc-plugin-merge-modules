@@ -1,5 +1,5 @@
 /** @module merger */
-import { DeclarationReflection, DocumentReflection, ProjectReflection, ReflectionKind } from "typedoc";
+import { Comment, DeclarationReflection, DocumentReflection, ProjectReflection, ReflectionKind } from "typedoc";
 import {
     addDeclarationReflectionToTarget,
     addDocumentReflectionToTarget,
@@ -185,13 +185,26 @@ export class ModuleBundle {
     private copyCategoryDescriptionTagsIntoTargetModule(targetModule: DeclarationReflection): void {
         this.modules.forEach((module) => {
             if (module !== targetModule) {
-                const categoryDescriptions =
+                const categoryDescriptionsOfModule =
                     module.comment?.blockTags.filter((bt) => bt.tag === "@categoryDescription") ?? [];
 
-                // TODO: targetModule might not have comment property into which to push new ones
-                // TODO: targetModule might already have a @categoryDescription with the same name
+                if (categoryDescriptionsOfModule.length === 0) {
+                    return; // nothing to copy
+                }
 
-                targetModule.comment?.blockTags.push(...categoryDescriptions);
+                if (!targetModule.comment) {
+                    targetModule.comment = new Comment([], []);
+                }
+
+                categoryDescriptionsOfModule.forEach((categoryDescription) => {
+                    const targetModuleAlreadyHasThisCategoryDescriptionsTag = targetModule.comment?.blockTags.find(
+                        (bt) => bt.tag === "@categoryDescription" && bt.name === categoryDescription.name,
+                    );
+
+                    if (!targetModuleAlreadyHasThisCategoryDescriptionsTag) {
+                        targetModule.comment?.blockTags.push(categoryDescription);
+                    }
+                });
             }
         });
     }
@@ -238,16 +251,28 @@ export class ModuleBundle {
      * @param targetModule The target module into which the group descriptions are merged.
      */
     private copyGroupDescriptionTagsIntoTargetModule(targetModule: DeclarationReflection): void {
-        // merge groups
         this.modules.forEach((module) => {
             if (module !== targetModule) {
-                const groupDescriptions =
+                const groupDescriptionsOfModule =
                     module.comment?.blockTags.filter((bt) => bt.tag === "@groupDescription") ?? [];
 
-                // TODO: targetModule might not have comment property into which to push new ones
-                // TODO: targetModule might already have a @groupDescription with the same name
+                if (groupDescriptionsOfModule.length === 0) {
+                    return; // nothing to copy
+                }
 
-                targetModule.comment?.blockTags.push(...groupDescriptions);
+                if (!targetModule.comment) {
+                    targetModule.comment = new Comment([], []);
+                }
+
+                groupDescriptionsOfModule.forEach((groupDescription) => {
+                    const targetModuleAlreadyHasThisGroupDescriptionsTag = targetModule.comment?.blockTags.find(
+                        (bt) => bt.tag === "@groupDescription" && bt.name === groupDescription.name,
+                    );
+
+                    if (!targetModuleAlreadyHasThisGroupDescriptionsTag) {
+                        targetModule.comment?.blockTags.push(groupDescription);
+                    }
+                });
             }
         });
     }

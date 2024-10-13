@@ -28,7 +28,7 @@ export class ModuleMerger {
      */
     public execute(): void {
         const moduleBundles = this.createModuleBundles();
-        moduleBundles.forEach((bundle) => bundle.merge());
+        moduleBundles.forEach((bundle) => bundle.merge(this.plugin.runsAfterCategorization));
     }
 
     /**
