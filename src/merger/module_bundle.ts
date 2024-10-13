@@ -1,8 +1,9 @@
 /** @module merger */
-import { DeclarationReflection, DocumentReflection, ProjectReflection, ReflectionKind } from "typedoc";
+import { Comment, DeclarationReflection, DocumentReflection, ProjectReflection, ReflectionKind } from "typedoc";
 import {
     addDeclarationReflectionToTarget,
     addDocumentReflectionToTarget,
+    getNameFromDescriptionTag,
     removeDeclarationReflectionFromModule,
     removeDocumentReflectionFromModule,
     removeTagFromCommentsOf,
@@ -42,15 +43,28 @@ export class ModuleBundle {
 
     /**
      * Merges the modules of the bundle into one module.
+     * @param categorizationHasAlreadyHappened Defines if TypeDoc has already categorized the
+     *                                         reflections in the modules of the bundle.
      */
-    public merge(): void {
+    public merge(categorizationHasAlreadyHappened: boolean): void {
         // get target module
         const targetModule = this.getTargetModule();
         removeTagFromCommentsOf(targetModule, targetModuleCommentTag);
 
         this.mergeChildrenAndDocumentsIntoTargetModule(targetModule);
-        this.mergeCategoriesIntoTargetModule(targetModule);
-        this.mergeGroupsIntoTargetModule(targetModule);
+
+        if (categorizationHasAlreadyHappened) {
+            // In this case TypeDoc has already categorized and grouped the reflections.
+            // Therefore we must merge the content all categories and groups into the target module.
+            this.mergeCategoriesIntoTargetModule(targetModule);
+            this.mergeGroupsIntoTargetModule(targetModule);
+        } else {
+            // In this case we must copy the category descriptions into the target module because TypeDoc will look
+            // for them there when it categorizes and groups the reflections.
+            // If we don't do this then the category and group descriptions would be missing in the docs.
+            this.copyCategoryDescriptionTagsIntoTargetModule(targetModule);
+            this.copyGroupDescriptionTagsIntoTargetModule(targetModule);
+        }
 
         // remove rest modules
         this.modules.forEach((module) => {
@@ -144,6 +158,10 @@ export class ModuleBundle {
                         targetModule.categories = [...(targetModule.categories ?? []), category];
                     } else {
                         existingTargetCategory.children = existingTargetCategory.children.concat(category.children);
+
+                        if (existingTargetCategory.description?.length === 0 && category.description) {
+                            existingTargetCategory.description = category.description;
+                        }
                     }
                 });
             }
@@ -159,6 +177,38 @@ export class ModuleBundle {
                 }
                 return -1;
             });
+        });
+    }
+    /**
+     * Copies the category description comment tags into the the given target module.
+     * @param targetModule The target module into which the category descriptions are merged.
+     */
+    private copyCategoryDescriptionTagsIntoTargetModule(targetModule: DeclarationReflection): void {
+        this.modules.forEach((module) => {
+            if (module !== targetModule) {
+                const categoryDescriptionsOfModule =
+                    module.comment?.blockTags.filter((bt) => bt.tag === "@categoryDescription") ?? [];
+
+                if (categoryDescriptionsOfModule.length === 0) {
+                    return; // nothing to copy
+                }
+
+                if (!targetModule.comment) {
+                    targetModule.comment = new Comment([], []);
+                }
+
+                categoryDescriptionsOfModule.forEach((categoryDescription) => {
+                    const targetModuleAlreadyHasThisCategoryDescriptionsTag = targetModule.comment?.blockTags.find(
+                        (bt) =>
+                            bt.tag === "@categoryDescription" &&
+                            getNameFromDescriptionTag(bt) === getNameFromDescriptionTag(categoryDescription),
+                    );
+
+                    if (!targetModuleAlreadyHasThisCategoryDescriptionsTag) {
+                        targetModule.comment?.blockTags.push(categoryDescription);
+                    }
+                });
+            }
         });
     }
 
@@ -177,6 +227,10 @@ export class ModuleBundle {
                         targetModule.groups = [...(targetModule.groups ?? []), group];
                     } else {
                         existingTargetGroup.children = existingTargetGroup.children.concat(group.children);
+
+                        if (existingTargetGroup.description?.length === 0 && group.description) {
+                            existingTargetGroup.description = group.description;
+                        }
                     }
                 });
             }
@@ -192,6 +246,39 @@ export class ModuleBundle {
                 }
                 return -1;
             });
+        });
+    }
+
+    /**
+     * Copies the group description comment tags into the the given target module.
+     * @param targetModule The target module into which the group descriptions are merged.
+     */
+    private copyGroupDescriptionTagsIntoTargetModule(targetModule: DeclarationReflection): void {
+        this.modules.forEach((module) => {
+            if (module !== targetModule) {
+                const groupDescriptionsOfModule =
+                    module.comment?.blockTags.filter((bt) => bt.tag === "@groupDescription") ?? [];
+
+                if (groupDescriptionsOfModule.length === 0) {
+                    return; // nothing to copy
+                }
+
+                if (!targetModule.comment) {
+                    targetModule.comment = new Comment([], []);
+                }
+
+                groupDescriptionsOfModule.forEach((groupDescription) => {
+                    const targetModuleAlreadyHasThisGroupDescriptionsTag = targetModule.comment?.blockTags.find(
+                        (bt) =>
+                            bt.tag === "@groupDescription" &&
+                            getNameFromDescriptionTag(bt) === getNameFromDescriptionTag(groupDescription),
+                    );
+
+                    if (!targetModuleAlreadyHasThisGroupDescriptionsTag) {
+                        targetModule.comment?.blockTags.push(groupDescription);
+                    }
+                });
+            }
         });
     }
 }

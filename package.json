@@ -1,6 +1,6 @@
 {
     "name": "typedoc-plugin-merge-modules",
-    "version": "6.0.1",
+    "version": "6.0.2",
     "description": "Plugin for TypeDoc that merges the content of modules.",
     "author": {
         "name": "Krisztián Balla",
