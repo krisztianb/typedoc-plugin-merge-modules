@@ -22,14 +22,28 @@ import { tryGetOriginalReflectionName } from "./utils";
  */
 export class Plugin {
     /** The options of the plugin. */
-    private readonly options = new PluginOptions();
+    private readonly _options = new PluginOptions();
+
+    /**
+     * This is set to "true" if the merging logic of the plugin is executed after TypeDoc
+     * has already categorized the DeclarationReflections.
+     */
+    private _runsAfterCategorization = false;
 
     /**
      * Returns if the plugin is enabled.
      * @returns True if the plugin is enabled, otherwise false.
      */
     public get isEnabled(): boolean {
-        return this.options.mode !== "off";
+        return this._options.mode !== "off";
+    }
+
+    /**
+     * Returns if the merging logic of the plugin is executed after TypeDoc has categorized the DeclarationReflections.
+     * @returns True if the plugin is executed after categorization, otherwise false.
+     */
+    public get runsAfterCategorization(): boolean {
+        return this._runsAfterCategorization;
     }
 
     /**
@@ -37,7 +51,7 @@ export class Plugin {
      * @param typedoc The TypeDoc application.
      */
     public initialize(typedoc: Readonly<Application>): void {
-        this.options.addToApplication(typedoc);
+        this._options.addToApplication(typedoc);
         this.subscribeToApplicationEvents(typedoc);
     }
 
@@ -53,15 +67,25 @@ export class Plugin {
         );
 
         // When TypeDoc is running with the following entry point strategies, it will create a separate converter
-        // and trigger the "Converter.EVENT_RESOLVE_BEGIN" event for each package that it merges.
-        // So for these strategies we need to subscribe to an event that is triggered after this merge is complete.
+        // and trigger the "Converter.EVENT_RESOLVE_BEGIN" event for each package that it merges into the final
+        // ProjectReflection instance.
+        // So for these strategies we need to subscribe to an event that is triggered after this merge is complete,
+        // in order to be able to access all modules from each package.
         const typeDocUsesMultipleConverters =
             typedoc.entryPointStrategy === EntryPointStrategy.Merge ||
             typedoc.entryPointStrategy === EntryPointStrategy.Packages;
 
         if (typeDocUsesMultipleConverters) {
+            // The "Application.EVENT_PROJECT_REVIVE" event is triggered after the DeclarationReflections have been
+            // categorized by TypeDoc. This must be take into account by the
+            this._runsAfterCategorization = true;
+
             typedoc.on(Application.EVENT_PROJECT_REVIVE, (p: ProjectReflection) => this.onConvertersDone(p));
         } else {
+            // The "Converter.EVENT_RESOLVE_BEGIN" event is triggered before the DeclarationReflections have been
+            // categorized by TypeDoc.
+            this._runsAfterCategorization = false;
+
             typedoc.converter.on(Converter.EVENT_RESOLVE_BEGIN, (c: Readonly<Context>) =>
                 this.onConvertersDone(c.project),
             );
@@ -73,7 +97,7 @@ export class Plugin {
      * @param typedoc The TypeDoc application.
      */
     public onApplicationBootstrapEnd(typedoc: Readonly<Application>): void {
-        this.options.readValuesFromApplication(typedoc);
+        this._options.readValuesFromApplication(typedoc);
     }
 
     /**
@@ -84,7 +108,7 @@ export class Plugin {
     public onConverterCreateDeclaration(context: Readonly<Context>, reflection: DeclarationReflection): void {
         if (
             this.isEnabled &&
-            this.options.renameDefaults &&
+            this._options.renameDefaults &&
             reflection.name === "default" &&
             reflection.kindOf(
                 ReflectionKind.ClassOrInterface |
@@ -119,12 +143,12 @@ export class Plugin {
      * @returns The merger object, or undefined if the plugin is turned off.
      */
     private createMerger(project: ProjectReflection): ProjectMerger | ModuleMerger | undefined {
-        if (this.options.mode === "project") {
+        if (this._options.mode === "project") {
             return new ProjectMerger(project);
-        } else if (this.options.mode === "module") {
-            return new ModuleMerger(project);
-        } else if (this.options.mode === "module-category") {
-            return new ModuleCategoryMerger(project);
+        } else if (this._options.mode === "module") {
+            return new ModuleMerger(project, this);
+        } else if (this._options.mode === "module-category") {
+            return new ModuleCategoryMerger(project, this);
         }
 
         return undefined;

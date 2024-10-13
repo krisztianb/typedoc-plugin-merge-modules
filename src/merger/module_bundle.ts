@@ -42,15 +42,28 @@ export class ModuleBundle {
 
     /**
      * Merges the modules of the bundle into one module.
+     * @param categorizationHasAlreadyHappened Defines if TypeDoc has already categorized the
+     *                                         reflections in the modules of the bundle.
      */
-    public merge(): void {
+    public merge(categorizationHasAlreadyHappened: boolean): void {
         // get target module
         const targetModule = this.getTargetModule();
         removeTagFromCommentsOf(targetModule, targetModuleCommentTag);
 
         this.mergeChildrenAndDocumentsIntoTargetModule(targetModule);
-        this.mergeCategoriesIntoTargetModule(targetModule);
-        this.mergeGroupsIntoTargetModule(targetModule);
+
+        if (categorizationHasAlreadyHappened) {
+            // In this case TypeDoc has already categorized and grouped the reflections.
+            // Therefore we must merge the content all categories and groups into the target module.
+            this.mergeCategoriesIntoTargetModule(targetModule);
+            this.mergeGroupsIntoTargetModule(targetModule);
+        } else {
+            // In this case we must copy the category descriptions into the target module because TypeDoc will look
+            // for them there when it categorizes and groups the reflections.
+            // If we don't do this then the category and group descriptions would be missing in the docs.
+            this.copyCategoryDescriptionTagsIntoTargetModule(targetModule);
+            this.copyGroupDescriptionTagsIntoTargetModule(targetModule);
+        }
 
         // remove rest modules
         this.modules.forEach((module) => {
@@ -130,12 +143,46 @@ export class ModuleBundle {
     }
 
     /**
-     * Merges the category description comment tags into the the given target module.
-     * This must be done because categorization is done by TypeDoc based on these comments after the plugin is done.
-     * @param targetModule The target module into which the category descriptions are merged.
+     * Merges the children from all modules' categories into the corresponding category of the given target module.
+     * @param targetModule The target module into whoes categories the children should be merged.
      */
     private mergeCategoriesIntoTargetModule(targetModule: DeclarationReflection): void {
         // merge categories
+        this.modules.forEach((module) => {
+            if (module !== targetModule) {
+                module.categories?.forEach((category) => {
+                    const existingTargetCategory = targetModule.categories?.find((c) => c.title === category.title);
+
+                    if (!existingTargetCategory) {
+                        targetModule.categories = [...(targetModule.categories ?? []), category];
+                    } else {
+                        existingTargetCategory.children = existingTargetCategory.children.concat(category.children);
+
+                        if (existingTargetCategory.description?.length === 0 && category.description) {
+                            existingTargetCategory.description = category.description;
+                        }
+                    }
+                });
+            }
+        });
+
+        // sort categories
+        targetModule.categories?.forEach((category) => {
+            category.children.sort((a, b) => {
+                if (a.name > b.name) {
+                    return 1;
+                } else if (a.name === b.name) {
+                    return 0;
+                }
+                return -1;
+            });
+        });
+    }
+    /**
+     * Copies the category description comment tags into the the given target module.
+     * @param targetModule The target module into which the category descriptions are merged.
+     */
+    private copyCategoryDescriptionTagsIntoTargetModule(targetModule: DeclarationReflection): void {
         this.modules.forEach((module) => {
             if (module !== targetModule) {
                 const categoryDescriptions =
@@ -150,11 +197,47 @@ export class ModuleBundle {
     }
 
     /**
-     * Merges the group description comment tags into the the given target module.
-     * This must be done because groupization is done by TypeDoc based on these comments after the plugin is done.
-     * @param targetModule The target module into which the group descriptions are merged.
+     * Merges the children from all modules' groups into the corresponding group of the given target module.
+     * @param targetModule The target module into whoes groups the children should be merged.
      */
     private mergeGroupsIntoTargetModule(targetModule: DeclarationReflection): void {
+        // merge groups
+        this.modules.forEach((module) => {
+            if (module !== targetModule) {
+                module.groups?.forEach((group) => {
+                    const existingTargetGroup = targetModule.groups?.find((g) => g.title === group.title);
+
+                    if (!existingTargetGroup) {
+                        targetModule.groups = [...(targetModule.groups ?? []), group];
+                    } else {
+                        existingTargetGroup.children = existingTargetGroup.children.concat(group.children);
+
+                        if (existingTargetGroup.description?.length === 0 && group.description) {
+                            existingTargetGroup.description = group.description;
+                        }
+                    }
+                });
+            }
+        });
+
+        // sort groups
+        targetModule.groups?.forEach((group) => {
+            group.children.sort((a, b) => {
+                if (a.name > b.name) {
+                    return 1;
+                } else if (a.name === b.name) {
+                    return 0;
+                }
+                return -1;
+            });
+        });
+    }
+
+    /**
+     * Copies the group description comment tags into the the given target module.
+     * @param targetModule The target module into which the group descriptions are merged.
+     */
+    private copyGroupDescriptionTagsIntoTargetModule(targetModule: DeclarationReflection): void {
         // merge groups
         this.modules.forEach((module) => {
             if (module !== targetModule) {

@@ -1,3 +1,4 @@
+import { Plugin } from "src/plugin";
 import { DeclarationReflection, ProjectReflection } from "typedoc";
 import { getModulesFrom } from "../utils";
 import { ModuleBundle } from "./module_bundle";
@@ -9,12 +10,17 @@ export class ModuleMerger {
     /** The project whose modules are merged. */
     protected readonly project: ProjectReflection;
 
+    /** The plugin which is using this merger. */
+    protected readonly plugin: Plugin;
+
     /**
      * Creates a new merger instance.
      * @param project The project whose modules are merged.
+     * @param plugin The plugin which is using this merger.
      */
-    public constructor(project: ProjectReflection) {
+    public constructor(project: ProjectReflection, plugin: Plugin) {
         this.project = project;
+        this.plugin = plugin;
     }
 
     /**
