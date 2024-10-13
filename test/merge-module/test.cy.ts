@@ -32,8 +32,10 @@ describe("modules/notMerged.html", () => {
     });
 
     it("contains the category Gamma and its description", () => {
-        cy.get(".col-content .tsd-index-section h3").should("have.text", "Gamma");
-        cy.get(".col-content .tsd-index-section p").should("have.text", "Category description from the file of C.");
+        const sectionSelector = ".col-content .tsd-index-section:nth-of-type(1)";
+
+        cy.get(sectionSelector + " h3").should("have.text", "Gamma");
+        cy.get(sectionSelector + " p").should("have.text", "Category description from the file of C.");
     });
 });
 
