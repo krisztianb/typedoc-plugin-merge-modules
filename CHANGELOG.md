@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [6.0.2] - 2024-10-13
+### Fixed
+-   Category descriptions and group descriptions were missing in the generated documentation when TypeDoc was run
+    with an entryPointStrategy different than "merge" or "packages".
+
 ## [6.0.1] - 2024-09-22
 ### Fixed
 -   Project documentations (introduced in TypeDoc 0.26) were incorrectly handled and removed by the plugin.
@@ -83,7 +88,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 First release
 
-[unreleased]: https://github.com/krisztianb/typedoc-plugin-merge-modules/compare/v6.0.1...HEAD
+[unreleased]: https://github.com/krisztianb/typedoc-plugin-merge-modules/compare/v6.0.2...HEAD
+[6.0.2]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v6.0.2
 [6.0.1]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v6.0.1
 [6.0.0]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v6.0.0
 [5.1.0]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v5.1.0
