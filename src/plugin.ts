@@ -144,7 +144,7 @@ export class Plugin {
      */
     private createMerger(project: ProjectReflection): ProjectMerger | ModuleMerger | undefined {
         if (this._options.mode === "project") {
-            return new ProjectMerger(project);
+            return new ProjectMerger(project, this);
         } else if (this._options.mode === "module") {
             return new ModuleMerger(project, this);
         } else if (this._options.mode === "module-category") {

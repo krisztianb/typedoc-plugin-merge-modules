@@ -45,10 +45,14 @@ export class ModuleBundle {
      * Merges the modules of the bundle into one module.
      * @param categorizationHasAlreadyHappened Defines if TypeDoc has already categorized the
      *                                         reflections in the modules of the bundle.
+     * @param targetOverride A module to target, taking precendence over the bundle's search.
      */
-    public merge(categorizationHasAlreadyHappened: boolean): void {
+    public merge(
+        categorizationHasAlreadyHappened: boolean,
+        targetOverride?: DeclarationReflection | ProjectReflection,
+    ): void {
         // get target module
-        const targetModule = this.getTargetModule();
+        const targetModule = targetOverride ?? this.getTargetModule();
         removeTagFromCommentsOf(targetModule, targetModuleCommentTag);
 
         this.mergeChildrenAndDocumentsIntoTargetModule(targetModule);
@@ -101,7 +105,7 @@ export class ModuleBundle {
         return this.modules[0];
     }
 
-    private mergeChildrenAndDocumentsIntoTargetModule(targetModule: DeclarationReflection): void {
+    private mergeChildrenAndDocumentsIntoTargetModule(targetModule: DeclarationReflection | ProjectReflection): void {
         for (const mod of this.modules) {
             // Here we create a copy because the next loop modifies the collection
             const reflections = [...(mod.childrenIncludingDocuments ?? [])];
@@ -125,7 +129,7 @@ export class ModuleBundle {
     // eslint-disable-next-line class-methods-use-this
     private moveDeclarationReflectionToTargetModule(
         ref: DeclarationReflection,
-        targetModule: DeclarationReflection,
+        targetModule: DeclarationReflection | ProjectReflection,
     ): void {
         removeDeclarationReflectionFromModule(ref);
         addDeclarationReflectionToTarget(ref, targetModule);
@@ -138,7 +142,10 @@ export class ModuleBundle {
      * @throws {Error} If the given reflection is not within a module.
      */
     // eslint-disable-next-line class-methods-use-this
-    private moveDocumentReflectionToTargetModule(ref: DocumentReflection, targetModule: DeclarationReflection): void {
+    private moveDocumentReflectionToTargetModule(
+        ref: DocumentReflection,
+        targetModule: DeclarationReflection | ProjectReflection,
+    ): void {
         removeDocumentReflectionFromModule(ref);
         addDocumentReflectionToTarget(ref, targetModule);
     }
@@ -147,7 +154,7 @@ export class ModuleBundle {
      * Merges the children from all modules' categories into the corresponding category of the given target module.
      * @param targetModule The target module into whoes categories the children should be merged.
      */
-    private mergeCategoriesIntoTargetModule(targetModule: DeclarationReflection): void {
+    private mergeCategoriesIntoTargetModule(targetModule: DeclarationReflection | ProjectReflection): void {
         // merge categories
         this.modules.forEach((module) => {
             if (module !== targetModule) {
@@ -183,7 +190,7 @@ export class ModuleBundle {
      * Copies the category description comment tags into the the given target module.
      * @param targetModule The target module into which the category descriptions are merged.
      */
-    private copyCategoryDescriptionTagsIntoTargetModule(targetModule: DeclarationReflection): void {
+    private copyCategoryDescriptionTagsIntoTargetModule(targetModule: DeclarationReflection | ProjectReflection): void {
         this.modules.forEach((module) => {
             if (module !== targetModule) {
                 const categoryDescriptionsOfModule =
@@ -216,7 +223,7 @@ export class ModuleBundle {
      * Merges the children from all modules' groups into the corresponding group of the given target module.
      * @param targetModule The target module into whoes groups the children should be merged.
      */
-    private mergeGroupsIntoTargetModule(targetModule: DeclarationReflection): void {
+    private mergeGroupsIntoTargetModule(targetModule: DeclarationReflection | ProjectReflection): void {
         // merge groups
         this.modules.forEach((module) => {
             if (module !== targetModule) {
@@ -253,7 +260,7 @@ export class ModuleBundle {
      * Copies the group description comment tags into the the given target module.
      * @param targetModule The target module into which the group descriptions are merged.
      */
-    private copyGroupDescriptionTagsIntoTargetModule(targetModule: DeclarationReflection): void {
+    private copyGroupDescriptionTagsIntoTargetModule(targetModule: DeclarationReflection | ProjectReflection): void {
         this.modules.forEach((module) => {
             if (module !== targetModule) {
                 const groupDescriptionsOfModule =
