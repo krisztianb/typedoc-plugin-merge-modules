@@ -77,7 +77,7 @@ export class Plugin {
 
         if (typeDocUsesMultipleConverters) {
             // The "Application.EVENT_PROJECT_REVIVE" event is triggered after the DeclarationReflections have been
-            // categorized by TypeDoc. This must be take into account by the
+            // categorized by TypeDoc.
             this._runsAfterCategorization = true;
 
             typedoc.on(Application.EVENT_PROJECT_REVIVE, (p: ProjectReflection) => this.onConvertersDone(p));
