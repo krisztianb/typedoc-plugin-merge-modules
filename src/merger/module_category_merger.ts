@@ -1,4 +1,3 @@
-/** @module merger */
 import { DeclarationReflection } from "typedoc";
 import { ModuleMerger } from "./module_merger";
 

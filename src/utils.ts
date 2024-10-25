@@ -50,7 +50,10 @@ export function tryGetOriginalReflectionName(
  * @param reflection The reflection from which the tag should be removed.
  * @param tagToRemove Name of the tag to be removed.
  */
-export function removeTagFromCommentsOf(reflection: DeclarationReflection, tagToRemove: string): void {
+export function removeTagFromCommentsOf(
+    reflection: DeclarationReflection | ProjectReflection,
+    tagToRemove: string,
+): void {
     const tagIndex = reflection.comment?.blockTags.findIndex((ct) => ct.tag === tagToRemove) ?? -1;
 
     if (tagIndex !== -1) {
@@ -130,6 +133,32 @@ export function removeDocumentReflectionFromModule(ref: DocumentReflection): voi
     if (indexInChildrenIncludingDocuments !== -1) {
         module.childrenIncludingDocuments?.splice(indexInChildrenIncludingDocuments, 1);
     }
+}
+
+/**
+ * Moves a declaration reflection to the given target.
+ * @param ref The declaration reflection that should be moved.
+ * @param target The target into which the declaration reflection should be moved.
+ */
+export function moveDeclarationReflectionToTarget(
+    ref: DeclarationReflection,
+    target: DeclarationReflection | ProjectReflection,
+): void {
+    removeDeclarationReflectionFromModule(ref);
+    addDeclarationReflectionToTarget(ref, target);
+}
+
+/**
+ * Moves a document reflection to the given target.
+ * @param ref The document reflection that should be moved.
+ * @param target The target into which the document reflection should be moved.
+ */
+export function moveDocumentReflectionToTarget(
+    ref: DocumentReflection,
+    target: DeclarationReflection | ProjectReflection,
+): void {
+    removeDocumentReflectionFromModule(ref);
+    addDocumentReflectionToTarget(ref, target);
 }
 
 /**
