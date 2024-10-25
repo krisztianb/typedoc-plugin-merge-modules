@@ -1,4 +1,5 @@
 /**
+ * @module
  * @categoryDescription Gamma
  * Category description from the file of C.
  */

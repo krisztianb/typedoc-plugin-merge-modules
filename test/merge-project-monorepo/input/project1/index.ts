@@ -1,4 +1,5 @@
 /**
+ * @module
  * @categoryDescription Alpha
  * Category description from the file of A.
  * @categoryDescription Beta
