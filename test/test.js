@@ -4,7 +4,7 @@ const execOptions = { stdio: "inherit" };
 
 console.log("===================================== TEST MERGE OFF ===============================================");
 execSync("cd merge-off && npx typedoc", execOptions);
-execSync("call npx cypress run --quiet --spec 'merge-off/test.cy.ts'", execOptions);
+execSync("npx cypress run --quiet --spec 'merge-off/test.cy.ts'", execOptions);
 
 console.log("=================================== TEST MERGE PROJECT =============================================");
 execSync("cd merge-project && npx typedoc", execOptions);
