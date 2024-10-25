@@ -136,6 +136,32 @@ export function removeDocumentReflectionFromModule(ref: DocumentReflection): voi
 }
 
 /**
+ * Moves a declaration reflection to the given target.
+ * @param ref The declaration reflection that should be moved.
+ * @param target The target into which the declaration reflection should be moved.
+ */
+export function moveDeclarationReflectionToTarget(
+    ref: DeclarationReflection,
+    target: DeclarationReflection | ProjectReflection,
+): void {
+    removeDeclarationReflectionFromModule(ref);
+    addDeclarationReflectionToTarget(ref, target);
+}
+
+/**
+ * Moves a document reflection to the given target.
+ * @param ref The document reflection that should be moved.
+ * @param target The target into which the document reflection should be moved.
+ */
+export function moveDocumentReflectionToTarget(
+    ref: DocumentReflection,
+    target: DeclarationReflection | ProjectReflection,
+): void {
+    removeDocumentReflectionFromModule(ref);
+    addDocumentReflectionToTarget(ref, target);
+}
+
+/**
  * Returns the modules within the given module parent. Searches recursively.
  * @param moduleParent The element in which to search for modules.
  * @returns The modules within the given module parent.

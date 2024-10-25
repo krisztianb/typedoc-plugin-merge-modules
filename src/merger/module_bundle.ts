@@ -1,11 +1,8 @@
-/** @module merger */
 import { Comment, DeclarationReflection, DocumentReflection, ProjectReflection, ReflectionKind } from "typedoc";
 import {
-    addDeclarationReflectionToTarget,
-    addDocumentReflectionToTarget,
     getNameFromDescriptionTag,
-    removeDeclarationReflectionFromModule,
-    removeDocumentReflectionFromModule,
+    moveDeclarationReflectionToTarget,
+    moveDocumentReflectionToTarget,
     removeTagFromCommentsOf,
 } from "../utils";
 
@@ -42,7 +39,7 @@ export class ModuleBundle {
     }
 
     /**
-     * Merges the modules of the bundle into one module.
+     * Merges the modules of the bundle into one module (or the given target override).
      * @param categorizationHasAlreadyHappened Defines if TypeDoc has already categorized the
      *                                         reflections in the modules of the bundle.
      * @param targetOverride A module to target, taking precendence over the bundle's search.
@@ -52,27 +49,27 @@ export class ModuleBundle {
         targetOverride?: DeclarationReflection | ProjectReflection,
     ): void {
         // get target module
-        const targetModule = targetOverride ?? this.getTargetModule();
-        removeTagFromCommentsOf(targetModule, targetModuleCommentTag);
+        const mergeTarget = targetOverride ?? this.getTargetModule();
+        removeTagFromCommentsOf(mergeTarget, targetModuleCommentTag);
 
-        this.mergeChildrenAndDocumentsIntoTargetModule(targetModule);
+        this.moveChildrenAndDocumentsIntoTarget(mergeTarget);
 
         if (categorizationHasAlreadyHappened) {
             // In this case TypeDoc has already categorized and grouped the reflections.
-            // Therefore we must merge the content all categories and groups into the target module.
-            this.mergeCategoriesIntoTargetModule(targetModule);
-            this.mergeGroupsIntoTargetModule(targetModule);
+            // Therefore we must copy the content of all categories and groups into the target.
+            this.moveCategoriesIntoTarget(mergeTarget);
+            this.moveGroupsIntoTarget(mergeTarget);
         } else {
-            // In this case we must copy the category descriptions into the target module because TypeDoc will look
+            // In this case we must copy the category descriptions into the target because TypeDoc will look
             // for them there when it categorizes and groups the reflections.
-            // If we don't do this then the category and group descriptions would be missing in the docs.
-            this.copyCategoryDescriptionTagsIntoTargetModule(targetModule);
-            this.copyGroupDescriptionTagsIntoTargetModule(targetModule);
+            // If we don't do this then the category and group descriptions will be missing in the docs.
+            this.copyCategoryDescriptionTagsIntoTarget(mergeTarget);
+            this.copyGroupDescriptionTagsIntoTarget(mergeTarget);
         }
 
         // remove rest modules
         this.modules.forEach((module) => {
-            if (module !== targetModule) {
+            if (module !== mergeTarget) {
                 delete module.children;
                 this.project.removeReflection(module);
             }
@@ -105,7 +102,11 @@ export class ModuleBundle {
         return this.modules[0];
     }
 
-    private mergeChildrenAndDocumentsIntoTargetModule(targetModule: DeclarationReflection | ProjectReflection): void {
+    /**
+     * Moves all children and documents into the given target.
+     * @param target The target into which the children and documents should be moved.
+     */
+    private moveChildrenAndDocumentsIntoTarget(target: DeclarationReflection | ProjectReflection): void {
         for (const mod of this.modules) {
             // Here we create a copy because the next loop modifies the collection
             const reflections = [...(mod.childrenIncludingDocuments ?? [])];
@@ -113,56 +114,27 @@ export class ModuleBundle {
             for (const ref of reflections) {
                 // Drop aliases (= ReflectionKind.Reference)
                 if (ref instanceof DeclarationReflection && !ref.kindOf(ReflectionKind.Reference)) {
-                    this.moveDeclarationReflectionToTargetModule(ref, targetModule);
+                    moveDeclarationReflectionToTarget(ref, target);
                 } else if (ref instanceof DocumentReflection) {
-                    this.moveDocumentReflectionToTargetModule(ref, targetModule);
+                    moveDocumentReflectionToTarget(ref, target);
                 }
             }
         }
     }
 
     /**
-     * Moves a declaration reflection to the given target module.
-     * @param ref The declaration reflection that should be moved.
-     * @param targetModule The target module into which the declaration reflection should be moved.
+     * Moves the children from all modules' categories into the corresponding category of the given target.
+     * @param target The target into whose categories the children should be moved.
      */
-    // eslint-disable-next-line class-methods-use-this
-    private moveDeclarationReflectionToTargetModule(
-        ref: DeclarationReflection,
-        targetModule: DeclarationReflection | ProjectReflection,
-    ): void {
-        removeDeclarationReflectionFromModule(ref);
-        addDeclarationReflectionToTarget(ref, targetModule);
-    }
-
-    /**
-     * Moves a document reflection to the given target module.
-     * @param ref The document reflection that should be moved.
-     * @param targetModule The target module into which the document reflection should be moved.
-     * @throws {Error} If the given reflection is not within a module.
-     */
-    // eslint-disable-next-line class-methods-use-this
-    private moveDocumentReflectionToTargetModule(
-        ref: DocumentReflection,
-        targetModule: DeclarationReflection | ProjectReflection,
-    ): void {
-        removeDocumentReflectionFromModule(ref);
-        addDocumentReflectionToTarget(ref, targetModule);
-    }
-
-    /**
-     * Merges the children from all modules' categories into the corresponding category of the given target module.
-     * @param targetModule The target module into whoes categories the children should be merged.
-     */
-    private mergeCategoriesIntoTargetModule(targetModule: DeclarationReflection | ProjectReflection): void {
-        // merge categories
+    private moveCategoriesIntoTarget(target: DeclarationReflection | ProjectReflection): void {
+        // move categories
         this.modules.forEach((module) => {
-            if (module !== targetModule) {
+            if (module !== target) {
                 module.categories?.forEach((category) => {
-                    const existingTargetCategory = targetModule.categories?.find((c) => c.title === category.title);
+                    const existingTargetCategory = target.categories?.find((c) => c.title === category.title);
 
                     if (!existingTargetCategory) {
-                        targetModule.categories = [...(targetModule.categories ?? []), category];
+                        target.categories = [...(target.categories ?? []), category];
                     } else {
                         existingTargetCategory.children = existingTargetCategory.children.concat(category.children);
 
@@ -175,7 +147,7 @@ export class ModuleBundle {
         });
 
         // sort categories
-        targetModule.categories?.forEach((category) => {
+        target.categories?.forEach((category) => {
             category.children.sort((a, b) => {
                 if (a.name > b.name) {
                     return 1;
@@ -187,12 +159,12 @@ export class ModuleBundle {
         });
     }
     /**
-     * Copies the category description comment tags into the the given target module.
-     * @param targetModule The target module into which the category descriptions are merged.
+     * Copies the category description comment tags into the the given target.
+     * @param target The target into which the category descriptions are copied.
      */
-    private copyCategoryDescriptionTagsIntoTargetModule(targetModule: DeclarationReflection | ProjectReflection): void {
+    private copyCategoryDescriptionTagsIntoTarget(target: DeclarationReflection | ProjectReflection): void {
         this.modules.forEach((module) => {
-            if (module !== targetModule) {
+            if (module !== target) {
                 const categoryDescriptionsOfModule =
                     module.comment?.blockTags.filter((bt) => bt.tag === "@categoryDescription") ?? [];
 
@@ -200,19 +172,19 @@ export class ModuleBundle {
                     return; // nothing to copy
                 }
 
-                if (!targetModule.comment) {
-                    targetModule.comment = new Comment([], []);
+                if (!target.comment) {
+                    target.comment = new Comment([], []);
                 }
 
                 categoryDescriptionsOfModule.forEach((categoryDescription) => {
-                    const targetModuleAlreadyHasThisCategoryDescriptionsTag = targetModule.comment?.blockTags.find(
+                    const targetModuleAlreadyHasThisCategoryDescriptionsTag = target.comment?.blockTags.find(
                         (bt) =>
                             bt.tag === "@categoryDescription" &&
                             getNameFromDescriptionTag(bt) === getNameFromDescriptionTag(categoryDescription),
                     );
 
                     if (!targetModuleAlreadyHasThisCategoryDescriptionsTag) {
-                        targetModule.comment?.blockTags.push(categoryDescription);
+                        target.comment?.blockTags.push(categoryDescription);
                     }
                 });
             }
@@ -220,18 +192,18 @@ export class ModuleBundle {
     }
 
     /**
-     * Merges the children from all modules' groups into the corresponding group of the given target module.
-     * @param targetModule The target module into whoes groups the children should be merged.
+     * Moves the children from all modules' groups into the corresponding group of the given target.
+     * @param target The target into whose groups the children should be moved.
      */
-    private mergeGroupsIntoTargetModule(targetModule: DeclarationReflection | ProjectReflection): void {
-        // merge groups
+    private moveGroupsIntoTarget(target: DeclarationReflection | ProjectReflection): void {
+        // move groups
         this.modules.forEach((module) => {
-            if (module !== targetModule) {
+            if (module !== target) {
                 module.groups?.forEach((group) => {
-                    const existingTargetGroup = targetModule.groups?.find((g) => g.title === group.title);
+                    const existingTargetGroup = target.groups?.find((g) => g.title === group.title);
 
                     if (!existingTargetGroup) {
-                        targetModule.groups = [...(targetModule.groups ?? []), group];
+                        target.groups = [...(target.groups ?? []), group];
                     } else {
                         existingTargetGroup.children = existingTargetGroup.children.concat(group.children);
 
@@ -244,7 +216,7 @@ export class ModuleBundle {
         });
 
         // sort groups
-        targetModule.groups?.forEach((group) => {
+        target.groups?.forEach((group) => {
             group.children.sort((a, b) => {
                 if (a.name > b.name) {
                     return 1;
@@ -257,12 +229,12 @@ export class ModuleBundle {
     }
 
     /**
-     * Copies the group description comment tags into the the given target module.
-     * @param targetModule The target module into which the group descriptions are merged.
+     * Copies the group description comment tags into the the given target.
+     * @param target The target into which the group descriptions are copied.
      */
-    private copyGroupDescriptionTagsIntoTargetModule(targetModule: DeclarationReflection | ProjectReflection): void {
+    private copyGroupDescriptionTagsIntoTarget(target: DeclarationReflection | ProjectReflection): void {
         this.modules.forEach((module) => {
-            if (module !== targetModule) {
+            if (module !== target) {
                 const groupDescriptionsOfModule =
                     module.comment?.blockTags.filter((bt) => bt.tag === "@groupDescription") ?? [];
 
@@ -270,19 +242,19 @@ export class ModuleBundle {
                     return; // nothing to copy
                 }
 
-                if (!targetModule.comment) {
-                    targetModule.comment = new Comment([], []);
+                if (!target.comment) {
+                    target.comment = new Comment([], []);
                 }
 
                 groupDescriptionsOfModule.forEach((groupDescription) => {
-                    const targetModuleAlreadyHasThisGroupDescriptionsTag = targetModule.comment?.blockTags.find(
+                    const targetModuleAlreadyHasThisGroupDescriptionsTag = target.comment?.blockTags.find(
                         (bt) =>
                             bt.tag === "@groupDescription" &&
                             getNameFromDescriptionTag(bt) === getNameFromDescriptionTag(groupDescription),
                     );
 
                     if (!targetModuleAlreadyHasThisGroupDescriptionsTag) {
-                        targetModule.comment?.blockTags.push(groupDescription);
+                        target.comment?.blockTags.push(groupDescription);
                     }
                 });
             }
