@@ -1,17 +1,17 @@
 import {
     Application,
-    Context,
+    type Context,
     Converter,
-    DeclarationReflection,
+    type DeclarationReflection,
     EntryPointStrategy,
-    ProjectReflection,
+    type ProjectReflection,
     ReflectionKind,
 } from "typedoc";
-import { ModuleCategoryMerger } from "./merger/module_category_merger";
-import { ModuleMerger } from "./merger/module_merger";
-import { ProjectMerger } from "./merger/project_merger";
-import { PluginOptions } from "./plugin_options";
-import { tryGetOriginalReflectionName } from "./utils";
+import { ModuleCategoryMerger } from "./merger/module_category_merger.js";
+import { ModuleMerger } from "./merger/module_merger.js";
+import { ProjectMerger } from "./merger/project_merger.js";
+import { PluginOptions } from "./plugin_options.js";
+import { tryGetOriginalReflectionName } from "./utils.js";
 
 /**
  * The "Merge Modules" plugin.

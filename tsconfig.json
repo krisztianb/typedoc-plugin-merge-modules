@@ -3,12 +3,14 @@
     "compilerOptions": {
         "outDir": "dist",
         "target": "es2015",
-        "module": "commonjs",
+        "module": "node16",
         "declaration": true,
         "baseUrl": "./",
         "strict": true,
         "noImplicitOverride": true,
         "exactOptionalPropertyTypes": true,
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "isolatedModules": true,
+        "verbatimModuleSyntax": true
     }
 }
