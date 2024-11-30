@@ -46,7 +46,7 @@ describe("modules/merged-1.html", () => {
     });
 
     it("contains a sub link to the class C", () => {
-        cy.get("nav").find("a[href='../classes/merged-1.C.html']");
+        cy.get("nav").find("a[href='../classes/merged.C.html']");
     });
 });
 
@@ -56,6 +56,6 @@ describe("modules/merged-2.html", () => {
     });
 
     it("contains a sub link to the class D", () => {
-        cy.get("nav").find("a[href='../classes/merged-2.D.html']");
+        cy.get("nav").find("a[href='../classes/merged.D.html']");
     });
 });

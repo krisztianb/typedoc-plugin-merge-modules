@@ -1,7 +1,6 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/unbound-method
-const { defineConfig } = require("cypress");
+import { defineConfig } from "cypress";
 
-module.exports = defineConfig({
+const config = defineConfig({
     e2e: {
         specPattern: "**/*.cy.ts",
         supportFile: false,
@@ -9,3 +8,5 @@ module.exports = defineConfig({
         screenshotOnRunFailure: false,
     },
 });
+
+export default config;

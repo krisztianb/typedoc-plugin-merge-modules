@@ -1,4 +1,4 @@
-import { Application, ParameterType } from "typedoc";
+import { type Application, ParameterType } from "typedoc";
 
 /** Type for the plugin's mode. */
 type Mode = "project" | "module" | "module-category" | "off";

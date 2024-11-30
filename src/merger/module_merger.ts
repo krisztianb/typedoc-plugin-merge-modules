@@ -1,7 +1,7 @@
-import { Plugin } from "src/plugin";
-import { DeclarationReflection, ProjectReflection } from "typedoc";
-import { getModulesFrom } from "../utils";
-import { ModuleBundle } from "./module_bundle";
+import type { Plugin } from "src/plugin.js";
+import type { DeclarationReflection, ProjectReflection } from "typedoc";
+import { getModulesFrom } from "../utils.js";
+import { ModuleBundle } from "./module_bundle.js";
 
 /**
  * Merger that merges the content of modules based on their JSDoc module annotation.

@@ -1,5 +1,5 @@
-import { DeclarationReflection } from "typedoc";
-import { ModuleMerger } from "./module_merger";
+import type { DeclarationReflection } from "typedoc";
+import { ModuleMerger } from "./module_merger.js";
 
 /**
  * Merger that merges the content of modules based on their JSDoc module annotation and category.

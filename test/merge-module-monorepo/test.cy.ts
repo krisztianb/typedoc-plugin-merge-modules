@@ -43,29 +43,29 @@ describe("modules/Project_2.merged.html", () => {
     });
 
     it("contains index links to the classes A, B and C", () => {
-        cy.get(".col-content .tsd-index-list").find("a[href='../classes/Project_2.merged.A.html']");
-        cy.get(".col-content .tsd-index-list").find("a[href='../classes/Project_2.merged.B.html']");
-        cy.get(".col-content .tsd-index-list").find("a[href='../classes/Project_2.merged.C.html']");
+        cy.get(".col-content .tsd-member-summaries").find("a[href='../classes/Project_2.merged.A.html']");
+        cy.get(".col-content .tsd-member-summaries").find("a[href='../classes/Project_2.merged.B.html']");
+        cy.get(".col-content .tsd-member-summaries").find("a[href='../classes/Project_2.merged.C.html']");
     });
 
     it("contains the category Alpha and its description", () => {
-        const sectionSelector = ".col-content .tsd-index-section:nth-of-type(2)";
+        const sectionSelector = ".col-content .tsd-panel-group:nth-of-type(2)";
 
-        cy.get(sectionSelector + " h3").should("have.text", "Alpha");
+        cy.get(sectionSelector + " h2").should("contain", "Alpha");
         cy.get(sectionSelector + " p").should("have.text", "Category description from the file of A.");
     });
 
     it("contains the category Beta and its description", () => {
-        const sectionSelector = ".col-content .tsd-index-section:nth-of-type(3)";
+        const sectionSelector = ".col-content .tsd-panel-group:nth-of-type(3)";
 
-        cy.get(sectionSelector + " h3").should("have.text", "Beta");
+        cy.get(sectionSelector + " h2").should("contain", "Beta");
         cy.get(sectionSelector + " p").should("have.text", "Category description from the file of B.");
     });
 
     it("contains the category Gamma and its description", () => {
-        const sectionSelector = ".col-content .tsd-index-section:nth-of-type(1)";
+        const sectionSelector = ".col-content .tsd-panel-group:nth-of-type(1)";
 
-        cy.get(sectionSelector + " h3").should("have.text", "Gamma");
+        cy.get(sectionSelector + " h2").should("contain", "Gamma");
         cy.get(sectionSelector + " p").should("have.text", "Category description from the file of C.");
     });
 });
