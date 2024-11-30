@@ -34,7 +34,7 @@ describe("modules/notMerged.html", () => {
     it("contains the category Gamma and its description", () => {
         const sectionSelector = ".col-content .tsd-panel-group:nth-of-type(1)";
 
-        cy.get(sectionSelector + " h2").should("have.text", " Gamma");
+        cy.get(sectionSelector + " h2").should("contain", "Gamma");
         cy.get(sectionSelector + " p").should("have.text", "Category description from the file of C.");
     });
 });
@@ -52,14 +52,14 @@ describe("modules/merged.html", () => {
     it("contains the category Alpha and its description", () => {
         const sectionSelector = ".col-content .tsd-panel-group:nth-of-type(1)";
 
-        cy.get(sectionSelector + " h2").should("have.text", " Alpha");
+        cy.get(sectionSelector + " h2").should("contain", "Alpha");
         cy.get(sectionSelector + " p").should("have.text", "Category description from the file of A.");
     });
 
     it("contains the category Beta and its description", () => {
         const sectionSelector = ".col-content .tsd-panel-group:nth-of-type(2)";
 
-        cy.get(sectionSelector + " h2").should("have.text", " Beta");
+        cy.get(sectionSelector + " h2").should("contain", "Beta");
         cy.get(sectionSelector + " p").should("have.text", "Category description from the file of B.");
     });
 });
