@@ -16,15 +16,15 @@
         "@types/node": "20.14.9",
         "@typescript-eslint/eslint-plugin": "7.14.1",
         "@typescript-eslint/parser": "7.14.1",
-        "cypress": "13.14.2",
+        "cypress": "13.16.0",
         "eslint": "8.56.0",
         "eslint-plugin-jsdoc": "48.5.0",
         "eslint-plugin-ordered-imports": "0.6.0",
         "eslint-plugin-unicorn": "54.0.0",
-        "prettier": "3.3.3",
+        "prettier": "3.4.1",
         "rimraf": "6.0.1",
-        "typedoc": "0.27.0",
-        "typescript": "5.5.4"
+        "typedoc": "0.27.2",
+        "typescript": "5.6.3"
     },
     "peerDependencies": {
         "typedoc": "0.26.x || 0.27.x"
