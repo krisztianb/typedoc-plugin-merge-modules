@@ -1,6 +1,6 @@
 {
     "name": "typedoc-plugin-merge-modules",
-    "version": "6.0.3",
+    "version": "6.1.0",
     "type": "module",
     "description": "Plugin for TypeDoc that merges the content of modules.",
     "author": {
@@ -27,7 +27,7 @@
         "typescript": "5.6.3"
     },
     "peerDependencies": {
-        "typedoc": "0.26.x || 0.27.x"
+        "typedoc": "0.26.x || ^0.27.1"
     },
     "repository": {
         "type": "git",
