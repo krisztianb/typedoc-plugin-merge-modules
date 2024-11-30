@@ -1,10 +1,10 @@
-import { Comment, DeclarationReflection, DocumentReflection, ProjectReflection, ReflectionKind } from "typedoc";
+import { Comment, DeclarationReflection, DocumentReflection, type ProjectReflection, ReflectionKind } from "typedoc";
 import {
     getNameFromDescriptionTag,
     moveDeclarationReflectionToTarget,
     moveDocumentReflectionToTarget,
     removeTagFromCommentsOf,
-} from "../utils";
+} from "../utils.js";
 
 /**
  * Name of the comment tag that can be used to mark a module as the target module within the bundle.

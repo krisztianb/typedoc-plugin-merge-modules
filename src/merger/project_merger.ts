@@ -1,7 +1,7 @@
-import { ProjectReflection } from "typedoc";
-import { Plugin } from "../plugin";
-import { getModulesFrom } from "../utils";
-import { ModuleBundle } from "./module_bundle";
+import type { ProjectReflection } from "typedoc";
+import type { Plugin } from "../plugin.js";
+import { getModulesFrom } from "../utils.js";
+import { ModuleBundle } from "./module_bundle.js";
 
 /**
  * Merger that moves the content of all modules into the project root.

@@ -1,12 +1,12 @@
 import {
-    CommentTag,
-    Context,
+    type CommentTag,
+    type Context,
     DeclarationReflection,
-    DocumentReflection,
-    ProjectReflection,
+    type DocumentReflection,
+    type ProjectReflection,
     ReflectionKind,
 } from "typedoc";
-import * as ts from "typescript";
+import type * as ts from "typescript";
 
 /**
  * Type extending the TypeScript Declaration interface with a possible identifier object as a name.

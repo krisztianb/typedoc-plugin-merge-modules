@@ -1,6 +1,6 @@
-import { Application } from "typedoc";
-import { Plugin } from "./plugin";
-import { PluginConfig } from "./plugin_options";
+import type { Application } from "typedoc";
+import { Plugin } from "./plugin.js";
+import type { PluginConfig } from "./plugin_options.js";
 
 /**
  * Type that can be intersected with TypeDoc's config type to have static type checking for the plugin's configuration.

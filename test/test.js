@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { execSync } = require("child_process");
+import { execSync } from "node:child_process";
 const execOptions = { stdio: "inherit" };
 
 console.log("===================================== TEST MERGE OFF ===============================================");
