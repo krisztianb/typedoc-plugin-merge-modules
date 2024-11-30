@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [6.1.0] - 2024-11-30
+### Added
+-   Added support for latest TypeDoc version 0.27.x.
+
 ## [6.0.3] - 2024-10-25
 ### Fixed
 -   Category descriptions and group descriptions were missing when merging into the project root.
@@ -92,7 +96,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 First release
 
-[unreleased]: https://github.com/krisztianb/typedoc-plugin-merge-modules/compare/v6.0.3...HEAD
+[unreleased]: https://github.com/krisztianb/typedoc-plugin-merge-modules/compare/v6.1.0...HEAD
+[6.1.0]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v6.1.0
 [6.0.3]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v6.0.3
 [6.0.2]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v6.0.2
 [6.0.1]: https://github.com/krisztianb/typedoc-plugin-merge-modules/releases/tag/v6.0.1
