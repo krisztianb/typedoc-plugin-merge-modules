@@ -61,10 +61,12 @@ export class Plugin {
      * @param typedoc The TypeDoc application.
      */
     private subscribeToApplicationEvents(typedoc: Readonly<Application>): void {
-        typedoc.on(Application.EVENT_BOOTSTRAP_END, (a: Readonly<Application>) => this.onApplicationBootstrapEnd(a));
-        typedoc.converter.on(Converter.EVENT_CREATE_DECLARATION, (c: Readonly<Context>, r: DeclarationReflection) =>
-            this.onConverterCreateDeclaration(c, r),
-        );
+        typedoc.on(Application.EVENT_BOOTSTRAP_END, (a: Readonly<Application>) => {
+            this.onApplicationBootstrapEnd(a);
+        });
+        typedoc.converter.on(Converter.EVENT_CREATE_DECLARATION, (c: Readonly<Context>, r: DeclarationReflection) => {
+            this.onConverterCreateDeclaration(c, r);
+        });
 
         // When TypeDoc is running with the following entry point strategies, it will create a separate converter
         // and trigger the "Converter.EVENT_RESOLVE_BEGIN" event for each package that it merges into the final
@@ -80,15 +82,17 @@ export class Plugin {
             // categorized by TypeDoc.
             this._runsAfterCategorization = true;
 
-            typedoc.on(Application.EVENT_PROJECT_REVIVE, (p: ProjectReflection) => this.onConvertersDone(p));
+            typedoc.on(Application.EVENT_PROJECT_REVIVE, (p: ProjectReflection) => {
+                this.onConvertersDone(p);
+            });
         } else {
             // The "Converter.EVENT_RESOLVE_BEGIN" event is triggered before the DeclarationReflections have been
             // categorized by TypeDoc.
             this._runsAfterCategorization = false;
 
-            typedoc.converter.on(Converter.EVENT_RESOLVE_BEGIN, (c: Readonly<Context>) =>
-                this.onConvertersDone(c.project),
-            );
+            typedoc.converter.on(Converter.EVENT_RESOLVE_BEGIN, (c: Readonly<Context>) => {
+                this.onConvertersDone(c.project);
+            });
         }
     }
 

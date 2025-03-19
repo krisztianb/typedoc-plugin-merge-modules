@@ -2,8 +2,8 @@
     "include": ["src"],
     "compilerOptions": {
         "outDir": "dist",
-        "target": "es2015",
-        "module": "node16",
+        "target": "ES2022",
+        "module": "Node16",
         "declaration": true,
         "baseUrl": "./",
         "strict": true,

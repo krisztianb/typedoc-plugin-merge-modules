@@ -32,7 +32,9 @@ export class ProjectMerger {
 
         // Create a module bundle for all the modules
         const bundle = new ModuleBundle(this.project);
-        allModules.forEach((module) => bundle.add(module));
+        allModules.forEach((module) => {
+            bundle.add(module);
+        });
 
         // Merge the bundle into the project
         bundle.merge(this.plugin.runsAfterCategorization, this.project);
