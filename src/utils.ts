@@ -27,7 +27,7 @@ export function tryGetOriginalReflectionName(
     context: Readonly<Context>,
     reflection: DeclarationReflection,
 ): string | undefined {
-    const symbol = context.project.getSymbolFromReflection(reflection);
+    const symbol = context.getSymbolFromReflection(reflection);
 
     if (symbol) {
         if (symbol.name && symbol.name !== "default") {
