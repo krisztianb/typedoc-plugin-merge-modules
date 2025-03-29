@@ -4,10 +4,15 @@
 
 This is a plugin for [TypeDoc](https://github.com/TypeStrong/typedoc) that merges the content of modules.
 
-Use cases:
+**Remarks:**
+
+TypeDoc now supports a tag [`@mergeModuleWith`](https://typedoc.org/documents/Tags._mergeModuleWith.html) which can be used to achieve parts of what this plugin is capable of doing.
+If that tag is enough for your use case we advise to use that tag instead of installing and using this plugin.
+
+**Use cases of this plugin:**
 
 * If you want to document an entire application and not a library, you can specify all files that you want to have documented as entry points for TypeDoc and use this plugin to merge all modules into the project root removing the extra module layer.
-* If you want to merge the content of some modules in the TypeDoc output, you can use this plugin and [module annotations](https://typedoc.org/guides/doccomments/#files) in your files to specify which modules should be combined.
+* If you want to merge the content of some modules (maybe also by category) in the TypeDoc output, you can use this plugin and [module annotations](https://typedoc.org/guides/doccomments/#files) in your files to specify which modules should be combined.
 
 ## Example
 
@@ -23,7 +28,7 @@ This module can be installed using [npm](https://www.npmjs.com/package/typedoc-p
 $ npm install typedoc-plugin-merge-modules --save-dev
 ```
 
-The plugin requires TypeDoc version 0.26.0 or above to be installed. After installation you need to activate the plugin with a [typedoc command line argument](https://typedoc.org/options/configuration/#plugin) or inside your [typedoc config file](https://typedoc.org/options/configuration/#json-files).
+The plugin requires TypeDoc version 0.28.0 or above to be installed. After installation you need to activate the plugin with a [typedoc command line argument](https://typedoc.org/options/configuration/#plugin) or inside your [typedoc config file](https://typedoc.org/options/configuration/#json-files).
 
 Here is an example using a JavaScript config file:
 
