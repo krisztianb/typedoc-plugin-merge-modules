@@ -51,6 +51,7 @@ export class ModuleMerger {
         const modules = getModulesFrom(this.project);
         const moduleBundleMap = new Map<string, ModuleBundle>();
 
+        // Create bundles for modules that have the same ID
         for (const module of modules) {
             const bundleId = this.createModuleBundleId(module);
 
@@ -59,6 +60,13 @@ export class ModuleMerger {
             }
 
             moduleBundleMap.get(bundleId)?.add(module);
+        }
+
+        // Remove bundles that have only one module => nothing to merge there
+        for (const [bundleId, bundle] of moduleBundleMap) {
+            if (bundle.size <= 1) {
+                moduleBundleMap.delete(bundleId);
+            }
         }
 
         return [...moduleBundleMap.values()];

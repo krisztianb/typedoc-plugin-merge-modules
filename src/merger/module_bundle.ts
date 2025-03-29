@@ -31,6 +31,14 @@ export class ModuleBundle {
     }
 
     /**
+     * Returns the number of modules within the bundle.
+     * @returns The number of modules within the bundle.
+     */
+    public get size(): number {
+        return this.modules.length;
+    }
+
+    /**
      * Adds a module to the bundle.
      * @param module The module to add.
      */
