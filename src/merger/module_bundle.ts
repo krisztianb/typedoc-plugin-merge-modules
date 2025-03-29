@@ -3,6 +3,7 @@ import {
     getNameFromDescriptionTag,
     moveDeclarationReflectionToTarget,
     moveDocumentReflectionToTarget,
+    removeModuleFromParent,
     removeTagFromCommentsOf,
 } from "../utils.js";
 
@@ -78,8 +79,7 @@ export class ModuleBundle {
         // remove rest modules
         this.modules.forEach((module) => {
             if (module !== mergeTarget) {
-                delete module.children;
-                this.project.removeReflection(module);
+                removeModuleFromParent(module);
             }
         });
     }

@@ -3,7 +3,8 @@ import {
     type Context,
     DeclarationReflection,
     type DocumentReflection,
-    type ProjectReflection,
+    ProjectReflection,
+    ReflectionGroup,
     ReflectionKind,
 } from "typedoc";
 import type * as ts from "typescript";
@@ -132,6 +133,35 @@ export function removeDocumentReflectionFromModule(ref: DocumentReflection): voi
     const indexInChildrenIncludingDocuments = module.childrenIncludingDocuments?.indexOf(ref) ?? -1;
     if (indexInChildrenIncludingDocuments !== -1) {
         module.childrenIncludingDocuments?.splice(indexInChildrenIncludingDocuments, 1);
+    }
+}
+
+/**
+ * Removes the given reflection from the given group.
+ * @param ref The reflection that should be removed from the group.
+ * @param group The group from which the reflection should be removed.
+ */
+export function removeDeclarationReflectionFromGroup(ref: DeclarationReflection, group: ReflectionGroup): void {
+    const indexInGroup = group.children.indexOf(ref);
+    if (indexInGroup !== -1) {
+        group.children.splice(indexInGroup, 1);
+    }
+}
+
+/**
+ * Removes the given module from its parent.
+ * @param module The module that should be removed from its parent.
+ */
+export function removeModuleFromParent(module: DeclarationReflection): void {
+    const parent = module.parent;
+
+    if (parent instanceof DeclarationReflection || parent instanceof ProjectReflection) {
+        parent.removeChild(module);
+
+        const modulesGroup = parent.groups?.find((g) => g.title === "Modules");
+        if (modulesGroup) {
+            removeDeclarationReflectionFromGroup(module, modulesGroup);
+        }
     }
 }
 
