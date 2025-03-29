@@ -62,13 +62,6 @@ export class ModuleMerger {
             moduleBundleMap.get(bundleId)?.add(module);
         }
 
-        // Remove bundles that have only one module => nothing to merge there
-        for (const [bundleId, bundle] of moduleBundleMap) {
-            if (bundle.size <= 1) {
-                moduleBundleMap.delete(bundleId);
-            }
-        }
-
         return [...moduleBundleMap.values()];
     }
 }

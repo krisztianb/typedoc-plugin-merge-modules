@@ -63,85 +63,14 @@ export function removeTagFromCommentsOf(
 }
 
 /**
- * Adds the given declaration reflection to the given target.
- * @param ref The declaration reflection which should be added to the target.
- * @param target The target to which to add the declaration reflection.
- */
-export function addDeclarationReflectionToTarget(
-    ref: DeclarationReflection,
-    target: ProjectReflection | DeclarationReflection,
-): void {
-    ref.parent = target;
-    target.children?.push(ref);
-    target.childrenIncludingDocuments?.push(ref);
-}
-
-/**
- * Removes the given declaration reflection from its module.
- * @param ref The declaration reflection which should be removed from its module.
- * @throws {Error} If the given reflection is not within a module.
- */
-export function removeDeclarationReflectionFromModule(ref: DeclarationReflection): void {
-    const module = ref.parent;
-
-    if (!(module instanceof DeclarationReflection)) {
-        throw new Error("Trying to move a declaration reflection that is not part of a module");
-    }
-
-    const indexInChildren = module.children?.indexOf(ref) ?? -1;
-    if (indexInChildren !== -1) {
-        module.children?.splice(indexInChildren, 1);
-    }
-
-    const indexInChildrenIncludingDocuments = module.childrenIncludingDocuments?.indexOf(ref) ?? -1;
-    if (indexInChildrenIncludingDocuments !== -1) {
-        module.childrenIncludingDocuments?.splice(indexInChildrenIncludingDocuments, 1);
-    }
-}
-
-/**
- * Adds the given document reflection to the given target.
- * @param ref The document reflection which should be added to the target.
- * @param target The target to which to add the document reflection.
- */
-export function addDocumentReflectionToTarget(
-    ref: DocumentReflection,
-    target: ProjectReflection | DeclarationReflection,
-): void {
-    ref.parent = target;
-    target.documents?.push(ref);
-    target.childrenIncludingDocuments?.push(ref);
-}
-
-/**
- * Removes the given document reflection from its module.
- * @param ref The document reflection which should be removed from its module.
- * @throws {Error} If the given reflection is not within a module.
- */
-export function removeDocumentReflectionFromModule(ref: DocumentReflection): void {
-    const module = ref.parent;
-
-    if (!(module instanceof DeclarationReflection)) {
-        throw new Error("Trying to move a document reflection that is not part of a module");
-    }
-
-    const indexInDocuments = module.documents?.indexOf(ref) ?? -1;
-    if (indexInDocuments !== -1) {
-        module.documents?.splice(indexInDocuments, 1);
-    }
-
-    const indexInChildrenIncludingDocuments = module.childrenIncludingDocuments?.indexOf(ref) ?? -1;
-    if (indexInChildrenIncludingDocuments !== -1) {
-        module.childrenIncludingDocuments?.splice(indexInChildrenIncludingDocuments, 1);
-    }
-}
-
-/**
  * Removes the given reflection from the given group.
  * @param ref The reflection that should be removed from the group.
  * @param group The group from which the reflection should be removed.
  */
-export function removeDeclarationReflectionFromGroup(ref: DeclarationReflection, group: ReflectionGroup): void {
+export function removeReflectionFromGroup(
+    ref: DeclarationReflection | DocumentReflection,
+    group: ReflectionGroup,
+): void {
     const indexInGroup = group.children.indexOf(ref);
     if (indexInGroup !== -1) {
         group.children.splice(indexInGroup, 1);
@@ -149,46 +78,47 @@ export function removeDeclarationReflectionFromGroup(ref: DeclarationReflection,
 }
 
 /**
- * Removes the given module from its parent.
- * @param module The module that should be removed from its parent.
+ * Adds the given reflection to the given target.
+ * @param ref The reflection which should be added to the target.
+ * @param target The target to which to add the reflection.
  */
-export function removeModuleFromParent(module: DeclarationReflection): void {
-    const parent = module.parent;
+export function addReflectionToTarget(
+    ref: DeclarationReflection | DocumentReflection,
+    target: ProjectReflection | DeclarationReflection,
+): void {
+    ref.parent = target;
+    target.addChild(ref);
+}
+
+/**
+ * Removes the given reflection from its parent.
+ * @param ref The reflection which should be removed from its parent.
+ */
+export function removeReflectionFromParent(ref: DeclarationReflection | DocumentReflection): void {
+    const parent = ref.parent;
 
     if (parent instanceof DeclarationReflection || parent instanceof ProjectReflection) {
-        parent.removeChild(module);
+        parent.removeChild(ref);
 
+        // If the parent has a group called "Modules", remove the reflection from that group as well. (GH-23)
         const modulesGroup = parent.groups?.find((g) => g.title === "Modules");
         if (modulesGroup) {
-            removeDeclarationReflectionFromGroup(module, modulesGroup);
+            removeReflectionFromGroup(ref, modulesGroup);
         }
     }
 }
 
 /**
- * Moves a declaration reflection to the given target.
- * @param ref The declaration reflection that should be moved.
- * @param target The target into which the declaration reflection should be moved.
+ * Moves a reflection to the given target.
+ * @param ref The reflection that should be moved.
+ * @param target The target into which the reflection should be moved.
  */
-export function moveDeclarationReflectionToTarget(
-    ref: DeclarationReflection,
+export function moveReflectionToTarget(
+    ref: DeclarationReflection | DocumentReflection,
     target: DeclarationReflection | ProjectReflection,
 ): void {
-    removeDeclarationReflectionFromModule(ref);
-    addDeclarationReflectionToTarget(ref, target);
-}
-
-/**
- * Moves a document reflection to the given target.
- * @param ref The document reflection that should be moved.
- * @param target The target into which the document reflection should be moved.
- */
-export function moveDocumentReflectionToTarget(
-    ref: DocumentReflection,
-    target: DeclarationReflection | ProjectReflection,
-): void {
-    removeDocumentReflectionFromModule(ref);
-    addDocumentReflectionToTarget(ref, target);
+    removeReflectionFromParent(ref);
+    addReflectionToTarget(ref, target);
 }
 
 /**

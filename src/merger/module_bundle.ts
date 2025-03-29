@@ -1,9 +1,8 @@
 import { Comment, DeclarationReflection, DocumentReflection, type ProjectReflection, ReflectionKind } from "typedoc";
 import {
     getNameFromDescriptionTag,
-    moveDeclarationReflectionToTarget,
-    moveDocumentReflectionToTarget,
-    removeModuleFromParent,
+    moveReflectionToTarget,
+    removeReflectionFromParent,
     removeTagFromCommentsOf,
 } from "../utils.js";
 
@@ -29,14 +28,6 @@ export class ModuleBundle {
      */
     public constructor(project: ProjectReflection) {
         this.project = project;
-    }
-
-    /**
-     * Returns the number of modules within the bundle.
-     * @returns The number of modules within the bundle.
-     */
-    public get size(): number {
-        return this.modules.length;
     }
 
     /**
@@ -79,7 +70,7 @@ export class ModuleBundle {
         // remove rest modules
         this.modules.forEach((module) => {
             if (module !== mergeTarget) {
-                removeModuleFromParent(module);
+                removeReflectionFromParent(module);
             }
         });
     }
@@ -121,10 +112,11 @@ export class ModuleBundle {
 
             for (const ref of reflections) {
                 // Drop aliases (= ReflectionKind.Reference)
-                if (ref instanceof DeclarationReflection && !ref.kindOf(ReflectionKind.Reference)) {
-                    moveDeclarationReflectionToTarget(ref, target);
-                } else if (ref instanceof DocumentReflection) {
-                    moveDocumentReflectionToTarget(ref, target);
+                if (
+                    (ref instanceof DeclarationReflection && !ref.kindOf(ReflectionKind.Reference)) ||
+                    ref instanceof DocumentReflection
+                ) {
+                    moveReflectionToTarget(ref, target);
                 }
             }
         }
