@@ -28,7 +28,9 @@ export class ModuleMerger {
      */
     public execute(): void {
         const moduleBundles = this.createModuleBundles();
-        moduleBundles.forEach((bundle) => bundle.merge(this.plugin.runsAfterCategorization));
+        moduleBundles.forEach((bundle) => {
+            bundle.merge(this.plugin.runsAfterCategorization);
+        });
     }
 
     /**
@@ -49,6 +51,7 @@ export class ModuleMerger {
         const modules = getModulesFrom(this.project);
         const moduleBundleMap = new Map<string, ModuleBundle>();
 
+        // Create bundles for modules that have the same ID
         for (const module of modules) {
             const bundleId = this.createModuleBundleId(module);
 

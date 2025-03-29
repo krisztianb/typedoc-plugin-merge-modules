@@ -7,7 +7,8 @@ type Mode = "project" | "module" | "module-category" | "off";
  * Extend typedoc's options with the plugin's option using declaration merging.
  */
 declare module "typedoc" {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- This is not a separate type.
+    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/consistent-type-definitions -- This is not a separate type.
     export interface TypeDocOptionMap extends Required<PluginConfig> {}
 }
 
